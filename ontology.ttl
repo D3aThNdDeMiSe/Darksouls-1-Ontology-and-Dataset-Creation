@@ -1,0 +1,782 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+@prefix ds: <http://darksouls.ontology/> .
+
+# Ontology Declaration
+ds: a owl:Ontology ;
+    rdfs:label "Dark Souls Game Ontology" ;
+    rdfs:comment "An ontology modeling the mechanics, items, characters, and world of Dark Souls" ;
+    owl:versionInfo "1.0" .
+
+# ============================================
+# CLASSES
+# ============================================
+
+# Root Item Class
+ds:Item a owl:Class ;
+    rdfs:label "Item" ;
+    rdfs:comment "Any obtainable object in the game world" .
+
+# Equipment Classes
+ds:Equipment a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Equipment" ;
+    rdfs:comment "Wearable or usable gear" .
+
+ds:Weapon a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Weapon" ;
+    rdfs:comment "Offensive equipment" .
+
+ds:Melee a owl:Class ;
+    rdfs:subClassOf ds:Weapon ;
+    rdfs:label "Melee Weapon" ;
+    rdfs:comment "Close-range weapons" .
+
+ds:Ranged a owl:Class ;
+    rdfs:subClassOf ds:Weapon ;
+    rdfs:label "Ranged Weapon" ;
+    rdfs:comment "Distance weapons" .
+
+ds:Armor a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Armor" ;
+    rdfs:comment "Defensive equipment" .
+
+ds:Shield a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Shield" ;
+    rdfs:comment "Blocking equipment" .
+
+ds:Ring a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Ring" ;
+    rdfs:comment "Accessory equipment" .
+
+# Consumable Items
+ds:Consumable a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Consumable" ;
+    rdfs:comment "Single-use or limited-use items" .
+
+ds:UpgradeMaterial a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Upgrade Material" ;
+    rdfs:comment "Items used to enhance equipment" .
+
+ds:KeyItem a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Key Item" ;
+    rdfs:comment "Quest and progression items" .
+
+ds:BossSoul a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Boss Soul" ;
+    rdfs:comment "Special items dropped by bosses" .
+
+# Character Classes
+ds:Boss a owl:Class ;
+    rdfs:label "Boss" ;
+    rdfs:comment "Major enemies with unique souls and mechanics" .
+
+ds:NPC a owl:Class ;
+    rdfs:label "NPC" ;
+    rdfs:comment "Non-player characters" .
+
+ds:Vendor a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Vendor" ;
+    rdfs:comment "NPCs who sell items" .
+
+ds:QuestGiver a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Quest Giver" ;
+    rdfs:comment "NPCs who provide quests" .
+
+ds:Summon a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Summon" ;
+    rdfs:comment "NPCs who can be summoned for assistance" .
+
+ds:HostileNPC a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Hostile NPC" ;
+    rdfs:comment "NPCs who attack the player" .
+
+ds:Enemy a owl:Class ;
+    rdfs:label "Enemy" ;
+    rdfs:comment "Regular hostile creatures" .
+
+# World Classes
+ds:Area a owl:Class ;
+    rdfs:label "Area" ;
+    rdfs:comment "Geographic locations in the game world" .
+
+ds:Covenant a owl:Class ;
+    rdfs:label "Covenant" ;
+    rdfs:comment "Factions players can join" .
+
+# Magic Classes
+ds:Spell a owl:Class ;
+    rdfs:label "Spell" ;
+    rdfs:comment "Magic abilities" .
+
+ds:Sorcery a owl:Class ;
+    rdfs:subClassOf ds:Spell ;
+    rdfs:label "Sorcery" ;
+    rdfs:comment "Intelligence-based magic" .
+
+ds:Miracle a owl:Class ;
+    rdfs:subClassOf ds:Spell ;
+    rdfs:label "Miracle" ;
+    rdfs:comment "Faith-based magic" .
+
+ds:Pyromancy a owl:Class ;
+    rdfs:subClassOf ds:Spell ;
+    rdfs:label "Pyromancy" ;
+    rdfs:comment "Fire-based magic" .
+
+# Upgrade System Classes
+ds:UpgradePath a owl:Class ;
+    rdfs:label "Upgrade Path" ;
+    rdfs:comment "Weapon enhancement routes" .
+
+ds:DamageType a owl:Class ;
+    rdfs:label "Damage Type" ;
+    rdfs:comment "Categories of damage" .
+
+# Enumeration Classes
+ds:ArmorSlot a owl:Class ;
+    rdfs:label "Armor Slot" ;
+    rdfs:comment "Body parts where armor can be equipped" .
+
+# ============================================
+# DEFINED CLASSES (Union, Intersection, Complement)
+# ============================================
+
+# Union: Equipment is exactly the union of Weapon, Armor, Shield, and Ring
+ds:Equipment owl:equivalentClass [
+    a owl:Class ;
+    owl:unionOf (ds:Weapon ds:Armor ds:Shield ds:Ring)
+] .
+
+# Intersection: Magic Weapon is a Weapon with intelligence requirement
+ds:MagicWeapon a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ds:Weapon
+            [ a owl:Restriction ;
+              owl:onProperty ds:intelligenceRequirement ;
+              owl:someValuesFrom xsd:integer ]
+        )
+    ] ;
+    rdfs:label "Magic Weapon" ;
+    rdfs:comment "Weapons that require intelligence to wield" .
+
+# Intersection: Purchasable Equipment
+ds:PurchasableEquipment a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ds:Equipment
+            [ a owl:Restriction ;
+              owl:onProperty ds:soldBy ;
+              owl:someValuesFrom ds:NPC ]
+        )
+    ] ;
+    rdfs:label "Purchasable Equipment" ;
+    rdfs:comment "Equipment that can be purchased from NPCs" .
+
+# Complement: Unique Equipment (NOT sold by any NPC)
+ds:UniqueEquipment a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ds:Equipment
+            [ a owl:Class ;
+              owl:complementOf [
+                  a owl:Restriction ;
+                  owl:onProperty ds:soldBy ;
+                  owl:someValuesFrom ds:NPC
+              ]
+            ]
+        )
+    ] ;
+    rdfs:label "Unique Equipment" ;
+    rdfs:comment "Equipment that cannot be purchased from any NPC" .
+
+# Complement: Non-Upgradable Weapon
+ds:NonUpgradableWeapon a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ds:Weapon
+            [ a owl:Class ;
+              owl:complementOf [
+                  a owl:Restriction ;
+                  owl:onProperty ds:upgradesTo ;
+                  owl:someValuesFrom ds:Weapon
+              ]
+            ]
+        )
+    ] ;
+    rdfs:label "Non-Upgradable Weapon" ;
+    rdfs:comment "Weapons that cannot be upgraded" .
+
+# Intersection: Faith-based Weapon
+ds:FaithWeapon a owl:Class ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ds:Weapon
+            [ a owl:Restriction ;
+              owl:onProperty ds:faithRequirement ;
+              owl:someValuesFrom xsd:integer ]
+        )
+    ] ;
+    rdfs:label "Faith Weapon" ;
+    rdfs:comment "Weapons that require faith to wield" .
+
+# ============================================
+# ENUMERATIONS
+# ============================================
+
+# Armor Slot Enumeration
+ds:ArmorSlot owl:equivalentClass [
+    a owl:Class ;
+    owl:oneOf (ds:Head ds:Chest ds:Hands ds:Legs)
+] .
+
+ds:Head a ds:ArmorSlot ;
+    rdfs:label "Head Slot" .
+
+ds:Chest a ds:ArmorSlot ;
+    rdfs:label "Chest Slot" .
+
+ds:Hands a ds:ArmorSlot ;
+    rdfs:label "Hands Slot" .
+
+ds:Legs a ds:ArmorSlot ;
+    rdfs:label "Legs Slot" .
+
+# Upgrade Type Enumeration
+ds:UpgradeType a owl:Class ;
+    rdfs:label "Upgrade Type" .
+
+ds:UpgradeType owl:equivalentClass [
+    a owl:Class ;
+    owl:oneOf (ds:Normal ds:Fire ds:Lightning ds:Divine ds:Occult ds:Magic ds:Enchanted ds:Chaos ds:Crystal)
+] .
+
+ds:Normal a ds:UpgradeType ;
+    rdfs:label "Normal Upgrade" .
+
+ds:Fire a ds:UpgradeType ;
+    rdfs:label "Fire Upgrade" .
+
+ds:Lightning a ds:UpgradeType ;
+    rdfs:label "Lightning Upgrade" .
+
+ds:Divine a ds:UpgradeType ;
+    rdfs:label "Divine Upgrade" .
+
+ds:Occult a ds:UpgradeType ;
+    rdfs:label "Occult Upgrade" .
+
+ds:Magic a ds:UpgradeType ;
+    rdfs:label "Magic Upgrade" .
+
+ds:Enchanted a ds:UpgradeType ;
+    rdfs:label "Enchanted Upgrade" .
+
+ds:Chaos a ds:UpgradeType ;
+    rdfs:label "Chaos Upgrade" .
+
+ds:Crystal a ds:UpgradeType ;
+    rdfs:label "Crystal Upgrade" .
+
+# Damage Type Enumeration
+ds:DamageType owl:equivalentClass [
+    a owl:Class ;
+    owl:oneOf (ds:PhysicalDamage ds:MagicDamage ds:FireDamage ds:LightningDamage ds:DivineDamage ds:OccultDamage)
+] .
+
+ds:PhysicalDamage a ds:DamageType ;
+    rdfs:label "Physical Damage" .
+
+ds:MagicDamage a ds:DamageType ;
+    rdfs:label "Magic Damage" .
+
+ds:FireDamage a ds:DamageType ;
+    rdfs:label "Fire Damage" .
+
+ds:LightningDamage a ds:DamageType ;
+    rdfs:label "Lightning Damage" .
+
+ds:DivineDamage a ds:DamageType ;
+    rdfs:label "Divine Damage" .
+
+ds:OccultDamage a ds:DamageType ;
+    rdfs:label "Occult Damage" .
+
+# ============================================
+# OBJECT PROPERTIES
+# ============================================
+
+# Item Acquisition Properties
+ds:droppedBy a owl:ObjectProperty ;
+    rdfs:label "dropped by" ;
+    rdfs:comment "Indicates which character drops this item" ;
+    rdfs:domain ds:Item ;
+    rdfs:range [ a owl:Class ;
+                 owl:unionOf (ds:Boss ds:Enemy ds:NPC) ] .
+
+ds:soldBy a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "sold by" ;
+    rdfs:comment "Indicates which NPC sells this item" ;
+    rdfs:domain ds:Item ;
+    rdfs:range ds:NPC .
+
+ds:foundIn a owl:ObjectProperty ;
+    rdfs:label "found in" ;
+    rdfs:comment "Indicates which area contains this item" ;
+    rdfs:domain ds:Item ;
+    rdfs:range ds:Area .
+
+# Weapon Upgrade Properties
+ds:upgradesTo a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:label "upgrades to" ;
+    rdfs:comment "Indicates the next level in weapon upgrade progression" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range ds:Weapon .
+
+ds:requiresItem a owl:ObjectProperty ;
+    rdfs:label "requires item" ;
+    rdfs:comment "Indicates which upgrade material is needed" ;
+    rdfs:domain ds:UpgradePath ;
+    rdfs:range ds:UpgradeMaterial .
+
+# Location Properties
+ds:locatedIn a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "located in" ;
+    rdfs:comment "Indicates the primary location of a character" ;
+    rdfs:domain [ a owl:Class ;
+                  owl:unionOf (ds:NPC ds:Boss ds:Enemy) ] ;
+    rdfs:range ds:Area .
+
+ds:connectsTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:label "connects to" ;
+    rdfs:comment "Indicates that two areas are directly connected" ;
+    rdfs:domain ds:Area ;
+    rdfs:range ds:Area .
+
+# Covenant Property
+ds:memberOfCovenant a owl:ObjectProperty ;
+    rdfs:label "member of covenant" ;
+    rdfs:comment "Indicates which covenant an NPC belongs to" ;
+    rdfs:domain ds:NPC ;
+    rdfs:range ds:Covenant .
+
+# Boss Weakness/Resistance Properties
+ds:weakTo a owl:ObjectProperty ;
+    rdfs:label "weak to" ;
+    rdfs:comment "Indicates a damage type the boss is vulnerable to" ;
+    rdfs:domain ds:Boss ;
+    rdfs:range ds:DamageType .
+
+ds:resistantTo a owl:ObjectProperty ;
+    rdfs:label "resistant to" ;
+    rdfs:comment "Indicates a damage type the boss resists" ;
+    rdfs:domain ds:Boss ;
+    rdfs:range ds:DamageType .
+
+# Spell Learning Property
+ds:taughtBy a owl:ObjectProperty ;
+    rdfs:label "taught by" ;
+    rdfs:comment "Indicates which NPC teaches this spell" ;
+    rdfs:domain ds:Spell ;
+    rdfs:range ds:NPC .
+
+# NPC Upgrade Service Property
+ds:performsUpgrade a owl:ObjectProperty ;
+    rdfs:label "performs upgrade" ;
+    rdfs:comment "Indicates which upgrade path an NPC can perform" ;
+    rdfs:domain ds:NPC ;
+    rdfs:range ds:UpgradePath .
+
+# Boss Soul Drop Property
+ds:drops a owl:ObjectProperty, owl:InverseFunctionalProperty ;
+    rdfs:label "drops" ;
+    rdfs:comment "Indicates which boss soul is dropped" ;
+    rdfs:domain ds:Boss ;
+    rdfs:range ds:BossSoul .
+
+# ============================================
+# DATA PROPERTIES
+# ============================================
+
+# Schema.org Properties (Reused)
+schema:name a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "The name of the entity" ;
+    rdfs:domain owl:Thing ;
+    rdfs:range xsd:string .
+
+schema:description a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "A description of the entity" ;
+    rdfs:domain owl:Thing ;
+    rdfs:range xsd:string .
+
+# General Item Properties
+ds:soulCost a owl:DatatypeProperty ;
+    rdfs:label "soul cost" ;
+    rdfs:comment "Purchase price in souls" ;
+    rdfs:domain ds:Item ;
+    rdfs:range xsd:integer .
+
+# Equipment Properties
+ds:weight a owl:DatatypeProperty ;
+    rdfs:label "weight" ;
+    rdfs:comment "Weight of the equipment, affects player movement speed" ;
+    rdfs:domain ds:Equipment ;
+    rdfs:range xsd:decimal .
+
+ds:durability a owl:DatatypeProperty ;
+    rdfs:label "durability" ;
+    rdfs:comment "Durability rating, degradation from use" ;
+    rdfs:domain ds:Equipment ;
+    rdfs:range xsd:integer .
+
+ds:canBeUpgraded a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "can be upgraded" ;
+    rdfs:comment "Whether the item can be enhanced" ;
+    rdfs:domain ds:Equipment ;
+    rdfs:range xsd:boolean .
+
+# Weapon Requirement Properties
+ds:strengthRequirement a owl:DatatypeProperty ;
+    rdfs:label "strength requirement" ;
+    rdfs:comment "Minimum strength required to wield" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:dexterityRequirement a owl:DatatypeProperty ;
+    rdfs:label "dexterity requirement" ;
+    rdfs:comment "Minimum dexterity required to wield" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:intelligenceRequirement a owl:DatatypeProperty ;
+    rdfs:label "intelligence requirement" ;
+    rdfs:comment "Minimum intelligence required to wield" ;
+    rdfs:domain [ a owl:Class ;
+                  owl:unionOf (ds:Weapon ds:Spell) ] ;
+    rdfs:range xsd:integer .
+
+ds:faithRequirement a owl:DatatypeProperty ;
+    rdfs:label "faith requirement" ;
+    rdfs:comment "Minimum faith required to wield or cast" ;
+    rdfs:domain [ a owl:Class ;
+                  owl:unionOf (ds:Weapon ds:Spell) ] ;
+    rdfs:range xsd:integer .
+
+# Weapon Scaling Properties
+ds:strengthScaling a owl:DatatypeProperty ;
+    rdfs:label "strength scaling" ;
+    rdfs:comment "How well the weapon scales with strength (S, A, B, C, D, E, -)" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:string .
+
+ds:dexterityScaling a owl:DatatypeProperty ;
+    rdfs:label "dexterity scaling" ;
+    rdfs:comment "How well the weapon scales with dexterity (S, A, B, C, D, E, -)" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:string .
+
+ds:intelligenceScaling a owl:DatatypeProperty ;
+    rdfs:label "intelligence scaling" ;
+    rdfs:comment "How well the weapon scales with intelligence (S, A, B, C, D, E, -)" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:string .
+
+ds:faithScaling a owl:DatatypeProperty ;
+    rdfs:label "faith scaling" ;
+    rdfs:comment "How well the weapon scales with faith (S, A, B, C, D, E, -)" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:string .
+
+# Weapon Damage Properties
+ds:physicalDamage a owl:DatatypeProperty ;
+    rdfs:label "physical damage" ;
+    rdfs:comment "Base physical damage dealt" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:magicDamage a owl:DatatypeProperty ;
+    rdfs:label "magic damage" ;
+    rdfs:comment "Base magic damage dealt" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:fireDamage a owl:DatatypeProperty ;
+    rdfs:label "fire damage" ;
+    rdfs:comment "Base fire damage dealt" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:lightningDamage a owl:DatatypeProperty ;
+    rdfs:label "lightning damage" ;
+    rdfs:comment "Base lightning damage dealt" ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+# Armor Defense Properties
+ds:physicalDefense a owl:DatatypeProperty ;
+    rdfs:label "physical defense" ;
+    rdfs:comment "Defense against physical damage" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:magicDefense a owl:DatatypeProperty ;
+    rdfs:label "magic defense" ;
+    rdfs:comment "Defense against magic damage" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:fireDefense a owl:DatatypeProperty ;
+    rdfs:label "fire defense" ;
+    rdfs:comment "Defense against fire damage" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:lightningDefense a owl:DatatypeProperty ;
+    rdfs:label "lightning defense" ;
+    rdfs:comment "Defense against lightning damage" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:poise a owl:DatatypeProperty ;
+    rdfs:label "poise" ;
+    rdfs:comment "Resistance to being staggered" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:decimal .
+
+ds:bleedResistance a owl:DatatypeProperty ;
+    rdfs:label "bleed resistance" ;
+    rdfs:comment "Resistance to bleeding status effect" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:poisonResistance a owl:DatatypeProperty ;
+    rdfs:label "poison resistance" ;
+    rdfs:comment "Resistance to poison status effect" ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+# Shield Properties
+ds:stability a owl:DatatypeProperty ;
+    rdfs:label "stability" ;
+    rdfs:comment "Stamina efficiency when blocking" ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:integer .
+
+ds:physicalReduction a owl:DatatypeProperty ;
+    rdfs:label "physical reduction" ;
+    rdfs:comment "Percentage of physical damage blocked" ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:decimal .
+
+ds:magicReduction a owl:DatatypeProperty ;
+    rdfs:label "magic reduction" ;
+    rdfs:comment "Percentage of magic damage blocked" ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:decimal .
+
+ds:fireReduction a owl:DatatypeProperty ;
+    rdfs:label "fire reduction" ;
+    rdfs:comment "Percentage of fire damage blocked" ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:decimal .
+
+ds:lightningReduction a owl:DatatypeProperty ;
+    rdfs:label "lightning reduction" ;
+    rdfs:comment "Percentage of lightning damage blocked" ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:decimal .
+
+# Boss/Enemy Properties
+ds:healthPoints a owl:DatatypeProperty ;
+    rdfs:label "health points" ;
+    rdfs:comment "Total HP of the boss or enemy" ;
+    rdfs:domain [ a owl:Class ;
+                  owl:unionOf (ds:Boss ds:Enemy) ] ;
+    rdfs:range xsd:integer .
+
+ds:souls a owl:DatatypeProperty ;
+    rdfs:label "souls" ;
+    rdfs:comment "Number of souls rewarded when defeated" ;
+    rdfs:domain [ a owl:Class ;
+                  owl:unionOf (ds:Boss ds:Enemy) ] ;
+    rdfs:range xsd:integer .
+
+# Spell Properties
+ds:uses a owl:DatatypeProperty ;
+    rdfs:label "uses" ;
+    rdfs:comment "Number of times the spell can be cast" ;
+    rdfs:domain ds:Spell ;
+    rdfs:range xsd:integer .
+
+ds:slots a owl:DatatypeProperty ;
+    rdfs:label "slots" ;
+    rdfs:comment "Number of attunement slots required" ;
+    rdfs:domain ds:Spell ;
+    rdfs:range xsd:integer .
+
+# Upgrade Path Properties
+ds:maxLevel a owl:DatatypeProperty ;
+    rdfs:label "max level" ;
+    rdfs:comment "Maximum enhancement level for this path" ;
+    rdfs:domain ds:UpgradePath ;
+    rdfs:range xsd:integer .
+
+ds:upgradeType a owl:DatatypeProperty ;
+    rdfs:label "upgrade type" ;
+    rdfs:comment "Type of upgrade path (Normal, Fire, Lightning, etc.)" ;
+    rdfs:domain ds:UpgradePath ;
+    rdfs:range xsd:string .
+
+# ============================================
+# CLASS RESTRICTIONS AND AXIOMS
+# ============================================
+
+# Every Boss drops exactly one Boss Soul
+ds:Boss rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:drops ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ds:BossSoul
+] .
+
+# Every Upgrade Path requires at least one Upgrade Material
+ds:UpgradePath rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:requiresItem ;
+    owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ds:UpgradeMaterial
+] .
+
+# Weapons can only upgrade to other Weapons
+ds:Weapon rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:upgradesTo ;
+    owl:allValuesFrom ds:Weapon
+] .
+
+# Bosses are only weak to Damage Types
+ds:Boss rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:weakTo ;
+    owl:allValuesFrom ds:DamageType
+] .
+
+# Bosses are only resistant to Damage Types
+ds:Boss rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:resistantTo ;
+    owl:allValuesFrom ds:DamageType
+] .
+
+# Boss Souls can only be dropped by Bosses
+ds:BossSoul rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty [ owl:inverseOf ds:drops ] ;
+    owl:allValuesFrom ds:Boss
+] .
+
+# NPCs must be located in exactly one Area
+ds:NPC rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:locatedIn ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ds:Area
+] .
+
+# Bosses must be located in exactly one Area
+ds:Boss rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:locatedIn ;
+    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass ds:Area
+] .
+
+# Spells can only be taught by NPCs
+ds:Spell rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:taughtBy ;
+    owl:allValuesFrom ds:NPC
+] .
+
+# Items can only be sold by Vendors (subclass of NPC)
+ds:Item rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:soldBy ;
+    owl:allValuesFrom ds:Vendor
+] .
+
+# Equipment must have a weight value
+ds:Equipment rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:weight ;
+    owl:someValuesFrom xsd:decimal
+] .
+
+# Weapons must have at least one damage value
+ds:Weapon rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:physicalDamage ;
+    owl:minCardinality "0"^^xsd:nonNegativeInteger
+] .
+
+# Areas can connect to multiple other Areas
+ds:Area rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ds:connectsTo ;
+    owl:minCardinality "1"^^xsd:nonNegativeInteger
+] .
+
+# ============================================
+# DISJOINT CLASSES
+# ============================================
+
+# Equipment subtypes are disjoint
+[] a owl:AllDisjointClasses ;
+   owl:members (ds:Weapon ds:Armor ds:Shield ds:Ring) .
+
+# Item subtypes are disjoint
+[] a owl:AllDisjointClasses ;
+   owl:members (ds:Equipment ds:Consumable ds:UpgradeMaterial ds:KeyItem ds:BossSoul) .
+
+# Weapon types are disjoint
+[] a owl:AllDisjointClasses ;
+   owl:members (ds:Melee ds:Ranged) .
+
+# Spell types are disjoint
+[] a owl:AllDisjointClasses ;
+   owl:members (ds:Sorcery ds:Miracle ds:Pyromancy) .
+
+# Character classes are disjoint
+[] a owl:AllDisjointClasses ;
+   owl:members (ds:Boss ds:NPC ds:Enemy) .
+
+# NPC types are disjoint
+[] a owl:AllDisjointClasses ;
+   owl:members (ds:Vendor ds:QuestGiver ds:Summon ds:HostileNPC) .
+
+# ============================================
+# END OF ONTOLOGY
+# ============================================

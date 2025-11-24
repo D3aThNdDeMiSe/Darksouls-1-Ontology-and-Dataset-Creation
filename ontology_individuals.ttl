@@ -1,0 +1,2549 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+@prefix ds: <http://darksouls.ontology/> .
+
+# Ontology Declaration
+ds: a owl:Ontology ;
+    rdfs:label "Dark Souls Game Ontology" ;
+    rdfs:comment "An ontology modeling the mechanics, items, characters, and world of Dark Souls" ;
+    owl:versionInfo "1.0" .
+
+# ============================================
+# CLASSES (Same as original)
+# ============================================
+
+ds:Item a owl:Class ;
+    rdfs:label "Item" ;
+    rdfs:comment "Any obtainable object in the game world" .
+
+ds:Equipment a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Equipment" ;
+    rdfs:comment "Wearable or usable gear" .
+
+ds:Weapon a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Weapon" ;
+    rdfs:comment "Offensive equipment" .
+
+ds:Melee a owl:Class ;
+    rdfs:subClassOf ds:Weapon ;
+    rdfs:label "Melee Weapon" ;
+    rdfs:comment "Close-range weapons" .
+
+ds:Ranged a owl:Class ;
+    rdfs:subClassOf ds:Weapon ;
+    rdfs:label "Ranged Weapon" ;
+    rdfs:comment "Distance weapons" .
+
+ds:Armor a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Armor" ;
+    rdfs:comment "Defensive equipment" .
+
+ds:Shield a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Shield" ;
+    rdfs:comment "Blocking equipment" .
+
+ds:Ring a owl:Class ;
+    rdfs:subClassOf ds:Equipment ;
+    rdfs:label "Ring" ;
+    rdfs:comment "Accessory equipment" .
+
+ds:Consumable a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Consumable" ;
+    rdfs:comment "Single-use or limited-use items" .
+
+ds:UpgradeMaterial a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Upgrade Material" ;
+    rdfs:comment "Items used to enhance equipment" .
+
+ds:KeyItem a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Key Item" ;
+    rdfs:comment "Quest and progression items" .
+
+ds:BossSoul a owl:Class ;
+    rdfs:subClassOf ds:Item ;
+    rdfs:label "Boss Soul" ;
+    rdfs:comment "Special items dropped by bosses" .
+
+ds:Boss a owl:Class ;
+    rdfs:label "Boss" ;
+    rdfs:comment "Major enemies with unique souls and mechanics" .
+
+ds:NPC a owl:Class ;
+    rdfs:label "NPC" ;
+    rdfs:comment "Non-player characters" .
+
+ds:Vendor a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Vendor" ;
+    rdfs:comment "NPCs who sell items" .
+
+ds:QuestGiver a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Quest Giver" ;
+    rdfs:comment "NPCs who provide quests" .
+
+ds:Summon a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Summon" ;
+    rdfs:comment "NPCs who can be summoned for assistance" .
+
+ds:HostileNPC a owl:Class ;
+    rdfs:subClassOf ds:NPC ;
+    rdfs:label "Hostile NPC" ;
+    rdfs:comment "NPCs who attack the player" .
+
+ds:Enemy a owl:Class ;
+    rdfs:label "Enemy" ;
+    rdfs:comment "Regular hostile creatures" .
+
+ds:Area a owl:Class ;
+    rdfs:label "Area" ;
+    rdfs:comment "Geographic locations in the game world" .
+
+ds:Covenant a owl:Class ;
+    rdfs:label "Covenant" ;
+    rdfs:comment "Factions players can join" .
+
+ds:Spell a owl:Class ;
+    rdfs:label "Spell" ;
+    rdfs:comment "Magic abilities" .
+
+ds:Sorcery a owl:Class ;
+    rdfs:subClassOf ds:Spell ;
+    rdfs:label "Sorcery" ;
+    rdfs:comment "Intelligence-based magic" .
+
+ds:Miracle a owl:Class ;
+    rdfs:subClassOf ds:Spell ;
+    rdfs:label "Miracle" ;
+    rdfs:comment "Faith-based magic" .
+
+ds:Pyromancy a owl:Class ;
+    rdfs:subClassOf ds:Spell ;
+    rdfs:label "Pyromancy" ;
+    rdfs:comment "Fire-based magic" .
+
+ds:UpgradePath a owl:Class ;
+    rdfs:label "Upgrade Path" ;
+    rdfs:comment "Weapon enhancement routes" .
+
+ds:DamageType a owl:Class ;
+    rdfs:label "Damage Type" ;
+    rdfs:comment "Categories of damage" .
+
+ds:ArmorSlot a owl:Class ;
+    rdfs:label "Armor Slot" ;
+    rdfs:comment "Body parts where armor can be equipped" .
+
+# ============================================
+# PROPERTIES (Same as original - abbreviated here)
+# ============================================
+
+ds:droppedBy a owl:ObjectProperty ;
+    rdfs:domain ds:Item ;
+    rdfs:range [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy ds:NPC) ] .
+
+ds:soldBy a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain ds:Item ;
+    rdfs:range ds:NPC .
+
+ds:foundIn a owl:ObjectProperty ;
+    rdfs:domain ds:Item ;
+    rdfs:range ds:Area .
+
+ds:upgradesTo a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range ds:Weapon .
+
+ds:requiresItem a owl:ObjectProperty ;
+    rdfs:domain ds:UpgradePath ;
+    rdfs:range ds:UpgradeMaterial .
+
+ds:locatedIn a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (ds:NPC ds:Boss ds:Enemy) ] ;
+    rdfs:range ds:Area .
+
+ds:connectsTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain ds:Area ;
+    rdfs:range ds:Area .
+
+ds:memberOfCovenant a owl:ObjectProperty ;
+    rdfs:domain ds:NPC ;
+    rdfs:range ds:Covenant .
+
+ds:weakTo a owl:ObjectProperty ;
+    rdfs:domain ds:Boss ;
+    rdfs:range ds:DamageType .
+
+ds:resistantTo a owl:ObjectProperty ;
+    rdfs:domain ds:Boss ;
+    rdfs:range ds:DamageType .
+
+ds:taughtBy a owl:ObjectProperty ;
+    rdfs:domain ds:Spell ;
+    rdfs:range ds:NPC .
+
+ds:performsUpgrade a owl:ObjectProperty ;
+    rdfs:domain ds:NPC ;
+    rdfs:range ds:UpgradePath .
+
+ds:drops a owl:ObjectProperty, owl:InverseFunctionalProperty ;
+    rdfs:domain ds:Boss ;
+    rdfs:range ds:BossSoul .
+
+# Data Properties
+ds:soulCost a owl:DatatypeProperty ;
+    rdfs:domain ds:Item ;
+    rdfs:range xsd:integer .
+
+ds:weight a owl:DatatypeProperty ;
+    rdfs:domain ds:Equipment ;
+    rdfs:range xsd:decimal .
+
+ds:durability a owl:DatatypeProperty ;
+    rdfs:domain ds:Equipment ;
+    rdfs:range xsd:integer .
+
+ds:strengthRequirement a owl:DatatypeProperty ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:dexterityRequirement a owl:DatatypeProperty ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:intelligenceRequirement a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (ds:Weapon ds:Spell) ] ;
+    rdfs:range xsd:integer .
+
+ds:faithRequirement a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (ds:Weapon ds:Spell) ] ;
+    rdfs:range xsd:integer .
+
+ds:physicalDamage a owl:DatatypeProperty ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:magicDamage a owl:DatatypeProperty ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:fireDamage a owl:DatatypeProperty ;
+    rdfs:domain ds:Weapon ;
+    rdfs:range xsd:integer .
+
+ds:physicalDefense a owl:DatatypeProperty ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:magicDefense a owl:DatatypeProperty ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:integer .
+
+ds:poise a owl:DatatypeProperty ;
+    rdfs:domain ds:Armor ;
+    rdfs:range xsd:decimal .
+
+ds:stability a owl:DatatypeProperty ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:integer .
+
+ds:physicalReduction a owl:DatatypeProperty ;
+    rdfs:domain ds:Shield ;
+    rdfs:range xsd:decimal .
+
+ds:healthPoints a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy) ] ;
+    rdfs:range xsd:integer .
+
+ds:souls a owl:DatatypeProperty ;
+    rdfs:domain [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy) ] ;
+    rdfs:range xsd:integer .
+
+ds:uses a owl:DatatypeProperty ;
+    rdfs:domain ds:Spell ;
+    rdfs:range xsd:integer .
+
+ds:slots a owl:DatatypeProperty ;
+    rdfs:domain ds:Spell ;
+    rdfs:range xsd:integer .
+
+# ============================================
+# ENUMERATION INDIVIDUALS
+# ============================================
+
+# Damage Types
+ds:PhysicalDamage a ds:DamageType ;
+    rdfs:label "Physical Damage" .
+
+ds:MagicDamage a ds:DamageType ;
+    rdfs:label "Magic Damage" .
+
+ds:FireDamage a ds:DamageType ;
+    rdfs:label "Fire Damage" .
+
+ds:LightningDamage a ds:DamageType ;
+    rdfs:label "Lightning Damage" .
+
+ds:DivineDamage a ds:DamageType ;
+    rdfs:label "Divine Damage" .
+
+ds:OccultDamage a ds:DamageType ;
+    rdfs:label "Occult Damage" .
+
+# Armor Slots
+ds:Head a ds:ArmorSlot ;
+    rdfs:label "Head Slot" .
+
+ds:Chest a ds:ArmorSlot ;
+    rdfs:label "Chest Slot" .
+
+ds:Hands a ds:ArmorSlot ;
+    rdfs:label "Hands Slot" .
+
+ds:Legs a ds:ArmorSlot ;
+    rdfs:label "Legs Slot" .
+
+# ============================================
+# AREA INDIVIDUALS
+# ============================================
+# Starting Area
+ds:UndeadAsylum a ds:Area ;
+    schema:name "Northern Undead Asylum" ;
+    schema:description "Starting area and tutorial dungeon" ;
+    ds:connectsTo ds:FirelinkShrine .
+
+# Central Hub
+ds:FirelinkShrine a ds:Area ;
+    schema:name "Firelink Shrine" ;
+    schema:description "The central hub of Lordran" ;
+    ds:connectsTo ds:UndeadAsylum, ds:UndeadBurg, ds:NewLondoRuins, ds:Catacombs, ds:NewLondoRuins .
+
+# Undead Burg Branch
+ds:UndeadBurg a ds:Area ;
+    schema:name "Undead Burg" ;
+    schema:description "A fortified city overrun by undead" ;
+    ds:connectsTo ds:FirelinkShrine, ds:UndeadParish, ds:LowerUndeadBurg, ds:DarkrootBasin .
+
+ds:LowerUndeadBurg a ds:Area ;
+    schema:name "Lower Undead Burg" ;
+    schema:description "Lower section of the Undead Burg" ;
+    ds:connectsTo ds:UndeadBurg, ds:DepthsArea .
+
+ds:DepthsArea a ds:Area ;
+    schema:name "The Depths" ;
+    schema:description "Flooded sewers beneath the Undead Burg" ;
+    ds:connectsTo ds:LowerUndeadBurg, ds:BlighttownUpper .
+
+ds:BlighttownUpper a ds:Area ;
+    schema:name "Blighttown (Upper)" ;
+    schema:description "Toxic shantytown built into a great chasm" ;
+    ds:connectsTo ds:DepthsArea, ds:BlighttownSwamp, ds:ValleyOfDrakes .
+
+ds:BlighttownSwamp a ds:Area ;
+    schema:name "Blighttown (Swamp)" ;
+    schema:description "Toxic swamp at the base of Blighttown" ;
+    ds:connectsTo ds:BlighttownUpper, ds:QuelaagsDomain, ds:GreatHollow .
+
+ds:GreatHollow a ds:Area ;
+    schema:name "The Great Hollow" ;
+    schema:description "Massive tree descending into the earth" ;
+    ds:connectsTo ds:BlighttownSwamp, ds:AshLake .
+
+ds:AshLake a ds:Area ;
+    schema:name "Ash Lake" ;
+    schema:description "Ancient lake beneath the world with Archtrees" ;
+    ds:connectsTo ds:GreatHollow .
+
+# Parish Branch
+ds:UndeadParish a ds:Area ;
+    schema:name "Undead Parish" ;
+    schema:description "A church area housing the Bell of Awakening" ;
+    ds:connectsTo ds:UndeadBurg, ds:DarkrootGarden, ds:SensFortress .
+
+ds:DarkrootGarden a ds:Area ;
+    schema:name "Darkroot Garden" ;
+    schema:description "A mystical forest filled with dangerous creatures" ;
+    ds:connectsTo ds:UndeadParish, ds:DarkrootBasin .
+
+ds:DarkrootBasin a ds:Area ;
+    schema:name "Darkroot Basin" ;
+    schema:description "Lower area of Darkroot with Hydra" ;
+    ds:connectsTo ds:DarkrootGarden, ds:UndeadBurg, ds:ValleyOfDrakes .
+
+ds:ValleyOfDrakes a ds:Area ;
+    schema:name "Valley of Drakes" ;
+    schema:description "Mountain pass inhabited by drakes" ;
+    ds:connectsTo ds:DarkrootBasin, ds:BlighttownUpper, ds:NewLondoRuins .
+
+# Sen's Fortress and Anor Londo
+ds:SensFortress a ds:Area ;
+    schema:name "Sen's Fortress" ;
+    schema:description "A deadly fortress filled with traps" ;
+    ds:connectsTo ds:UndeadParish, ds:AnorLondo .
+
+ds:AnorLondo a ds:Area ;
+    schema:name "Anor Londo" ;
+    schema:description "The magnificent city of the gods" ;
+    ds:connectsTo ds:SensFortress, ds:PaintedWorld, ds:TheDukesArchives .
+
+ds:PaintedWorld a ds:Area ;
+    schema:name "Painted World of Ariamis" ;
+    schema:description "Hidden world inside a painting" ;
+    ds:connectsTo ds:AnorLondo .
+
+ds:TheDukesArchives a ds:Area ;
+    schema:name "The Duke's Archives" ;
+    schema:description "Seath's library and research facility" ;
+    ds:connectsTo ds:AnorLondo, ds:CrystalCave .
+
+ds:CrystalCave a ds:Area ;
+    schema:name "Crystal Cave" ;
+    schema:description "A cave of invisible crystal pathways" ;
+    ds:connectsTo ds:TheDukesArchives .
+
+# New Londo Branch
+ds:NewLondoRuins a ds:Area ;
+    schema:name "New Londo Ruins" ;
+    schema:description "A flooded city cursed by ghosts" ;
+    ds:connectsTo ds:FirelinkShrine, ds:ValleyOfDrakes, ds:TheAbyss .
+
+ds:TheAbyss a ds:Area ;
+    schema:name "The Abyss" ;
+    schema:description "Void beneath New Londo where Four Kings dwell" ;
+    ds:connectsTo ds:NewLondoRuins .
+
+# Catacombs Branch
+ds:Catacombs a ds:Area ;
+    schema:name "Catacombs" ;
+    schema:description "Underground necropolis filled with skeletons" ;
+    ds:connectsTo ds:FirelinkShrine, ds:TombOfTheGiants .
+
+ds:TombOfTheGiants a ds:Area ;
+    schema:name "Tomb of the Giants" ;
+    schema:description "A pitch-black tomb of ancient giants" ;
+    ds:connectsTo ds:Catacombs .
+
+# Quelaag's Domain and Demon Ruins
+ds:QuelaagsDomain a ds:Area ;
+    schema:name "Quelaag's Domain" ;
+    schema:description "The lair of the Chaos Witch" ;
+    ds:connectsTo ds:BlighttownSwamp, ds:DemonRuins .
+
+ds:DemonRuins a ds:Area ;
+    schema:name "Demon Ruins" ;
+    schema:description "Ruins of the ancient demons" ;
+    ds:connectsTo ds:QuelaagsDomain, ds:LostIzalith .
+
+ds:LostIzalith a ds:Area ;
+    schema:name "Lost Izalith" ;
+    schema:description "The cursed city consumed by chaos flame" ;
+    ds:connectsTo ds:DemonRuins .
+
+# Endgame Area
+ds:KilnOfTheFirstFlame a ds:Area ;
+    schema:name "Kiln of the First Flame" ;
+    schema:description "Final area where Gwyn awaits" ;
+    ds:connectsTo ds:FirelinkShrine .
+
+# DLC Areas (Artorias of the Abyss)
+ds:RoyalWood a ds:Area ;
+    schema:name "Royal Wood" ;
+    schema:description "Ancient forest in Oolacile, accessed via DLC" ;
+    ds:connectsTo ds:DarkrootBasin, ds:OolacileTownship, ds:Chasm .
+
+ds:OolacileTownship a ds:Area ;
+    schema:name "Oolacile Township" ;
+    schema:description "Ruins of ancient Oolacile" ;
+    ds:connectsTo ds:RoyalWood, ds:OolacileDungeon .
+
+ds:OolacileDungeon a ds:Area ;
+    schema:name "Oolacile Dungeon" ;
+    schema:description "Underground prison of Oolacile" ;
+    ds:connectsTo ds:OolacileTownship, ds:Chasm .
+
+ds:Chasm a ds:Area ;
+    schema:name "Chasm of the Abyss" ;
+    schema:description "Deepest part of the Abyss where Manus resides" ;
+    ds:connectsTo ds:OolacileDungeon, ds:RoyalWood .
+
+# ============================================
+# BOSS LOCATION CORRECTIONS
+# ============================================
+
+# Update boss locations to match corrected areas
+ds:AsylumDemon ds:locatedIn ds:UndeadAsylum .
+ds:TaurusDemon ds:locatedIn ds:UndeadBurg .
+ds:BellGargoyles ds:locatedIn ds:UndeadParish .
+ds:CapraDemon ds:locatedIn ds:LowerUndeadBurg .
+ds:GapingDragon a ds:Boss ;
+    schema:name "Gaping Dragon" ;
+    schema:description "Grotesque dragon in the Depths" ;
+    ds:locatedIn ds:DepthsArea ;
+    ds:healthPoints 3200 ;
+    ds:souls 25000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:drops ds:GapingDragonSoul .
+ds:Quelaag ds:locatedIn ds:QuelaagsDomain .
+ds:IronGolem ds:locatedIn ds:SensFortress .
+ds:OrnsteinAndSmough ds:locatedIn ds:AnorLondo .
+ds:SifTheGreatWolf ds:locatedIn ds:DarkrootGarden .
+ds:MoonlightButterfly ds:locatedIn ds:DarkrootGarden .
+ds:PinwheelBoss ds:locatedIn ds:Catacombs .
+ds:SeathTheScaleless ds:locatedIn ds:CrystalCave .
+ds:GravelordNito ds:locatedIn ds:TombOfTheGiants .
+ds:BedOfChaos ds:locatedIn ds:LostIzalith .
+ds:FourKings ds:locatedIn ds:TheAbyss .
+ds:GwynLordOfCinder ds:locatedIn ds:KilnOfTheFirstFlame .
+ds:StrayDemon ds:locatedIn ds:UndeadAsylum .
+ds:DemonFiresage ds:locatedIn ds:DemonRuins .
+ds:CentipedeDemon ds:locatedIn ds:DemonRuins .
+ds:CentipedeDemonActual ds:locatedIn ds:LostIzalith .
+ds:PriscillaCrossbreed ds:locatedIn ds:PaintedWorld .
+ds:DarkSunGwyndolinBoss ds:locatedIn ds:AnorLondo .
+# ============================================
+# COVENANT INDIVIDUALS
+# ============================================
+
+ds:WayOfWhite a ds:Covenant ;
+    schema:name "Way of White" ;
+    schema:description "A covenant dedicated to Gwyn and cooperation" .
+
+ds:PrincessGuard a ds:Covenant ;
+    schema:name "Princess's Guard" ;
+    schema:description "Elite knights sworn to protect Gwynevere" .
+
+ds:WarriorOfSunlight a ds:Covenant ;
+    schema:name "Warrior of Sunlight" ;
+    schema:description "Covenant dedicated to jolly cooperation and Gwyn's firstborn" .
+
+ds:Darkwraith a ds:Covenant ;
+    schema:name "Darkwraith" ;
+    schema:description "Servants of the Dark serving Kaathe" .
+
+ds:PathOfTheDragon a ds:Covenant ;
+    schema:name "Path of the Dragon" ;
+    schema:description "Those seeking to transcend their humanity" .
+
+ds:ForestHunter a ds:Covenant ;
+    schema:name "Forest Hunter" ;
+    schema:description "Protectors of the forest and Alvina's domain" .
+
+ds:DarkmoonBlade a ds:Covenant ;
+    schema:name "Darkmoon Blade" ;
+    schema:description "Enforcers of justice hunting the guilty" .
+
+ds:ChaosServant a ds:Covenant ;
+    schema:name "Chaos Servant" ;
+    schema:description "Devoted to the Fair Lady and easing her suffering" .
+
+ds:GravelordServant a ds:Covenant ;
+    schema:name "Gravelord Servant" ;
+    schema:description "Spreaders of death and disease for Nito" .
+
+# ============================================
+# BOSS INDIVIDUALS
+# ============================================
+
+ds:AsylumDemon a ds:Boss ;
+    schema:name "Asylum Demon" ;
+    schema:description "Giant demon guarding the Undead Asylum" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:healthPoints 1176 ;
+    ds:souls 2000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:resistantTo ds:PhysicalDamage ;
+    ds:drops ds:AsylumDemonSoul .
+
+ds:TaurusDemon a ds:Boss ;
+    schema:name "Taurus Demon" ;
+    schema:description "A massive horned demon blocking the bridge" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:healthPoints 1215 ;
+    ds:souls 3000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:drops ds:TaurusDemonSoul .
+
+ds:BellGargoyles a ds:Boss ;
+    schema:name "Bell Gargoyles" ;
+    schema:description "Twin stone guardians of the first bell" ;
+    ds:locatedIn ds:UndeadParish ;
+    ds:healthPoints 1520 ;
+    ds:souls 10000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:GargoyleSoul .
+
+ds:CapraDemon a ds:Boss ;
+    schema:name "Capra Demon" ;
+    schema:description "A goat demon with two attack dogs" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:healthPoints 1234 ;
+    ds:souls 6000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:CapraDemonSoul .
+
+ds:Quelaag a ds:Boss ;
+    schema:name "Chaos Witch Quelaag" ;
+    schema:description "Half-woman, half-spider demon of chaos" ;
+    ds:locatedIn ds:QuelaagsDomain ;
+    ds:healthPoints 1600 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:QuelaagSoul .
+
+ds:IronGolem a ds:Boss ;
+    schema:name "Iron Golem" ;
+    schema:description "Massive iron guardian of Sen's Fortress" ;
+    ds:locatedIn ds:SensFortress ;
+    ds:healthPoints 3100 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:IronGolemSoul .
+
+ds:OrnsteinAndSmough a ds:Boss ;
+    schema:name "Ornstein and Smough" ;
+    schema:description "Dragon Slayer and Executioner, guardians of Anor Londo" ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:healthPoints 4200 ;
+    ds:souls 50000 ;
+    ds:weakTo ds:FireDamage, ds:LightningDamage ;
+    ds:drops ds:OrnsteinSoul .
+
+ds:SifTheGreatWolf a ds:Boss ;
+    schema:name "Sif, the Great Grey Wolf" ;
+    schema:description "Loyal companion of Artorias wielding his greatsword" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 3432 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:SifSoul .
+
+ds:PinwheelBoss a ds:Boss ;
+    schema:name "Pinwheel" ;
+    schema:description "Necromancer who stole Nito's power" ;
+    ds:locatedIn ds:Catacombs ;
+    ds:healthPoints 1100 ;
+    ds:souls 15000 ;
+    ds:weakTo ds:FireDamage, ds:PhysicalDamage ;
+    ds:drops ds:PinwheelSoul .
+
+ds:SeathTheScaleless a ds:Boss ;
+    schema:name "Seath the Scaleless" ;
+    schema:description "Albino dragon obsessed with immortality" ;
+    ds:locatedIn ds:CrystalCave ;
+    ds:healthPoints 7311 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:SeathSoul .
+
+ds:GravelordNito a ds:Boss ;
+    schema:name "Gravelord Nito" ;
+    schema:description "Lord of death and first of the dead" ;
+    ds:locatedIn ds:TombOfTheGiants ;
+    ds:healthPoints 6750 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:resistantTo ds:PhysicalDamage ;
+    ds:drops ds:NitoSoul .
+
+ds:BedOfChaos a ds:Boss ;
+    schema:name "Bed of Chaos" ;
+    schema:description "The corrupted Witch of Izalith" ;
+    ds:locatedIn ds:LostIzalith ;
+    ds:healthPoints 4444 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage, ds:MagicDamage ;
+    ds:drops ds:BedOfChaosSoul .
+
+ds:FourKings a ds:Boss ;
+    schema:name "Four Kings" ;
+    schema:description "Former rulers of New Londo corrupted by the Abyss" ;
+    ds:locatedIn ds:NewLondoRuins ;
+    ds:healthPoints 8000 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:FourKingsSoul .
+
+ds:GwynLordOfCinder a ds:Boss ;
+    schema:name "Gwyn, Lord of Cinder" ;
+    schema:description "The final boss, first Lord of Cinder" ;
+    ds:locatedIn ds:KilnOfTheFirstFlame ;
+    ds:healthPoints 4250 ;
+    ds:souls 70000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:resistantTo ds:LightningDamage ;
+    ds:drops ds:GwynSoul .
+
+# ============================================
+# BOSS SOUL INDIVIDUALS
+# ============================================
+
+ds:AsylumDemonSoul a ds:BossSoul ;
+    schema:name "Soul of Asylum Demon" ;
+    schema:description "Soul of the Asylum Demon" .
+
+ds:TaurusDemonSoul a ds:BossSoul ;
+    schema:name "Soul of Taurus Demon" .
+
+ds:GargoyleSoul a ds:BossSoul ;
+    schema:name "Soul of Iron Golem" .
+
+ds:CapraDemonSoul a ds:BossSoul ;
+    schema:name "Soul of Capra Demon" .
+
+ds:QuelaagSoul a ds:BossSoul ;
+    schema:name "Soul of Quelaag" ;
+    schema:description "Soul of the Chaos Witch Quelaag" .
+
+ds:IronGolemSoul a ds:BossSoul ;
+    schema:name "Core of an Iron Golem" .
+
+ds:OrnsteinSoul a ds:BossSoul ;
+    schema:name "Soul of Ornstein" .
+
+ds:SifSoul a ds:BossSoul ;
+    schema:name "Soul of Sif" .
+
+ds:PinwheelSoul a ds:BossSoul ;
+    schema:name "Soul of Pinwheel" .
+
+ds:SeathSoul a ds:BossSoul ;
+    schema:name "Soul of Seath" .
+
+ds:NitoSoul a ds:BossSoul ;
+    schema:name "Lord Soul of Nito" .
+
+ds:BedOfChaosSoul a ds:BossSoul ;
+    schema:name "Lord Soul of Bed of Chaos" .
+
+ds:FourKingsSoul a ds:BossSoul ;
+    schema:name "Soul of Four Kings" .
+
+ds:GwynSoul a ds:BossSoul ;
+    schema:name "Lord Soul of Gwyn" .
+
+# ============================================
+# NPC INDIVIDUALS
+# ============================================
+
+# Vendors
+ds:AndreOfAstora a ds:Vendor ;
+    schema:name "Andre of Astora" ;
+    schema:description "Master blacksmith of the Undead Parish" ;
+    ds:locatedIn ds:UndeadParish ;
+    ds:memberOfCovenant ds:WayOfWhite .
+
+ds:GiantBlacksmith a ds:Vendor ;
+    schema:name "Giant Blacksmith" ;
+    schema:description "Gentle giant who forges unique weapons" ;
+    ds:locatedIn ds:AnorLondo .
+
+ds:Vamos a ds:Vendor ;
+    schema:name "Vamos" ;
+    schema:description "Skeletal blacksmith of the Catacombs" ;
+    ds:locatedIn ds:Catacombs .
+
+ds:DominhnallOfZena a ds:Vendor ;
+    schema:name "Domhnall of Zena" ;
+    schema:description "Merchant selling armor sets" ;
+    ds:locatedIn ds:FirelinkShrine .
+
+ds:UndeadMerchant a ds:Vendor ;
+    schema:name "Undead Merchant" ;
+    schema:description "Friendly undead selling basic supplies" ;
+    ds:locatedIn ds:UndeadBurg .
+
+# Quest Givers & Important NPCs
+ds:Solaire a ds:QuestGiver, ds:Summon ;
+    schema:name "Solaire of Astora" ;
+    schema:description "Jolly warrior seeking his own sun" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:memberOfCovenant ds:WarriorOfSunlight .
+
+ds:Siegmeyer a ds:QuestGiver, ds:Summon ;
+    schema:name "Siegmeyer of Catarina" ;
+    schema:description "Onion knight on an adventure" ;
+    ds:locatedIn ds:UndeadBurg .
+
+ds:Lautrec a ds:HostileNPC ;
+    schema:name "Knight Lautrec" ;
+    schema:description "Mysterious knight who murders the Fire Keeper" ;
+    ds:locatedIn ds:FirelinkShrine .
+
+ds:Patches a ds:Vendor, ds:HostileNPC ;
+    schema:name "Patches" ;
+    schema:description "Treacherous merchant who pushes people off cliffs" ;
+    ds:locatedIn ds:Catacombs .
+
+ds:Griggs a ds:Vendor ;
+    schema:name "Griggs of Vinheim" ;
+    schema:description "Sorcerer selling magic spells" ;
+    ds:locatedIn ds:FirelinkShrine .
+
+ds:Laurentius a ds:Vendor ;
+    schema:name "Laurentius of the Great Swamp" ;
+    schema:description "Pyromancer teaching fire magic" ;
+    ds:locatedIn ds:FirelinkShrine .
+
+ds:Petrus a ds:Vendor ;
+    schema:name "Petrus of Thorolund" ;
+    schema:description "Cleric selling miracles" ;
+    ds:locatedIn ds:FirelinkShrine ;
+    ds:memberOfCovenant ds:WayOfWhite .
+
+ds:Ingward a ds:Vendor ;
+    schema:name "Ingward" ;
+    schema:description "Sealer who guards the Key to the Seal" ;
+    ds:locatedIn ds:NewLondoRuins .
+
+ds:Quelana a ds:Vendor ;
+    schema:name "Quelana of Izalith" ;
+    schema:description "Mother of pyromancy teaching advanced techniques" ;
+    ds:locatedIn ds:BlighttownSwamp .
+
+ds:FairLady a ds:QuestGiver ;
+    schema:name "Quelaag's Sister" ;
+    schema:description "The Fair Lady, leader of Chaos Servant covenant" ;
+    ds:locatedIn ds:QuelaagsDomain ;
+    ds:memberOfCovenant ds:ChaosServant .
+
+ds:Alvina a ds:QuestGiver ;
+    schema:name "Alvina" ;
+    schema:description "Giant cat leading the Forest Hunters" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:memberOfCovenant ds:ForestHunter .
+
+ds:DarksunGwyndolin a ds:QuestGiver ;
+    schema:name "Darksun Gwyndolin" ;
+    schema:description "Dark Sun leading the Darkmoon Blades" ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:memberOfCovenant ds:DarkmoonBlade .
+
+# ============================================
+# ENEMY INDIVIDUALS
+# ============================================
+
+ds:HollowSoldier a ds:Enemy ;
+    schema:name "Hollow Soldier" ;
+    schema:description "Undead warrior who lost their sanity" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:healthPoints 115 ;
+    ds:souls 100 .
+
+ds:HollowWarrior a ds:Enemy ;
+    schema:name "Hollow Warrior" ;
+    schema:description "More dangerous hollow with better equipment" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:healthPoints 153 ;
+    ds:souls 200 .
+
+ds:Balder a ds:Enemy ;
+    schema:name "Balder Knight" ;
+    schema:description "Elite knight of Balder" ;
+    ds:locatedIn ds:UndeadParish ;
+    ds:healthPoints 243 ;
+    ds:souls 300 .
+
+ds:SilverKnight a ds:Enemy ;
+    schema:name "Silver Knight" ;
+    schema:description "Elite guards of Anor Londo" ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:healthPoints 650 ;
+    ds:souls 1000 .
+
+ds:BlackKnight a ds:Enemy ;
+    schema:name "Black Knight" ;
+    schema:description "Charred knights who followed Gwyn" ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:healthPoints 788 ;
+    ds:souls 1800 .
+
+ds:GiantSkeleton a ds:Enemy ;
+    schema:name "Giant Skeleton" ;
+    schema:description "Massive skeleton warriors" ;
+    ds:locatedIn ds:TombOfTheGiants ;
+    ds:healthPoints 542 ;
+    ds:souls 500 .
+
+ds:Mimic a ds:Enemy ;
+    schema:name "Mimic" ;
+    schema:description "Chest that transforms into a monster" ;
+    ds:locatedIn ds:SensFortress ;
+    ds:healthPoints 1343 ;
+    ds:souls 2000 .
+
+ds:CrystalGolem a ds:Enemy ;
+    schema:name "Crystal Golem" ;
+    schema:description "Magical construct made of crystal" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 380 ;
+    ds:souls 800 .
+
+ds:InfectedBarbarian a ds:Enemy ;
+    schema:name "Infested Barbarian" ;
+    schema:description "Parasite-infected warrior" ;
+    ds:locatedIn ds:BlighttownSwamp ;
+    ds:healthPoints 327 ;
+    ds:souls 300 .
+
+ds:Ghost a ds:Enemy ;
+    schema:name "Ghost" ;
+    schema:description "Spectral beings requiring cursed weapons" ;
+    ds:locatedIn ds:NewLondoRuins ;
+    ds:healthPoints 122 ;
+    ds:souls 200 .
+
+ds:Skeleton a ds:Enemy ;
+    schema:name "Skeleton" ;
+    schema:description "Reanimated bones that resurrect unless necromancers are killed" ;
+    ds:locatedIn ds:Catacombs ;
+    ds:healthPoints 115 ;
+    ds:souls 100 .
+
+# ============================================
+# WEAPON INDIVIDUALS (20 total)
+# ============================================
+
+ds:Longsword a ds:Melee ;
+    schema:name "Longsword" ;
+    schema:description "Standard straight sword, well-balanced" ;
+    ds:weight 3.0 ;
+    ds:durability 200 ;
+    ds:strengthRequirement 10 ;
+    ds:dexterityRequirement 10 ;
+    ds:physicalDamage 110 ;
+    ds:foundIn ds:UndeadBurg ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 1000 .
+
+ds:Claymore a ds:Melee ;
+    schema:name "Claymore" ;
+    schema:description "Reliable greatsword with great reach" ;
+    ds:weight 6.0 ;
+    ds:durability 200 ;
+    ds:strengthRequirement 16 ;
+    ds:dexterityRequirement 10 ;
+    ds:physicalDamage 138 ;
+    ds:foundIn ds:UndeadBurg .
+
+ds:Zweihander a ds:Melee ;
+    schema:name "Zweihander" ;
+    schema:description "Ultra greatsword with devastating power" ;
+    ds:weight 10.0 ;
+    ds:durability 250 ;
+    ds:strengthRequirement 24 ;
+    ds:dexterityRequirement 10 ;
+    ds:physicalDamage 175 ;
+    ds:foundIn ds:FirelinkShrine ;
+    ds:soldBy ds:DominhnallOfZena ;
+    ds:soulCost 3000 .
+
+ds:Halberd a ds:Melee ;
+    schema:name "Halberd" ;
+    schema:description "Versatile polearm with sweeping attacks" ;
+    ds:weight 6.0 ;
+    ds:durability 180 ;
+    ds:strengthRequirement 16 ;
+    ds:dexterityRequirement 12 ;
+    ds:physicalDamage 130 ;
+    ds:droppedBy ds:HollowSoldier .
+
+ds:Uchigatana a ds:Melee ;
+    schema:name "Uchigatana" ;
+    schema:description "Katana with high dexterity scaling" ;
+    ds:weight 5.0 ;
+    ds:durability 120 ;
+    ds:strengthRequirement 14 ;
+    ds:dexterityRequirement 14 ;
+    ds:physicalDamage 115 ;
+    ds:foundIn ds:UndeadBurg ;
+    ds:droppedBy ds:UndeadMerchant .
+
+ds:BlackKnightSword a ds:Melee ;
+    schema:name "Black Knight Sword" ;
+    schema:description "Greatsword wielded by Black Knights" ;
+    ds:weight 8.0 ;
+    ds:durability 250 ;
+    ds:strengthRequirement 20 ;
+    ds:dexterityRequirement 18 ;
+    ds:physicalDamage 220 ;
+    ds:fireDamage 110 ;
+    ds:droppedBy ds:BlackKnight .
+
+ds:QuelaagsFurysword a ds:Melee ;
+    schema:name "Quelaag's Furysword" ;
+    schema:description "Curved sword infused with chaos flame" ;
+    ds:weight 3.0 ;
+    ds:durability 200 ;
+    ds:strengthRequirement 13 ;
+    ds:dexterityRequirement 13 ;
+    ds:physicalDamage 90 ;
+    ds:fireDamage 180 ;
+    ds:droppedBy ds:Quelaag .
+
+ds:GreatswordOfArtorias a ds:Melee ;
+    schema:name "Greatsword of Artorias" ;
+    schema:description "The cursed sword of Artorias the Abysswalker" ;
+    ds:weight 10.0 ;
+    ds:durability 300 ;
+    ds:strengthRequirement 24 ;
+    ds:dexterityRequirement 18 ;
+    ds:intelligenceRequirement 18 ;
+    ds:faithRequirement 18 ;
+    ds:physicalDamage 180 ;
+    ds:magicDamage 180 ;
+    ds:droppedBy ds:SifTheGreatWolf .
+
+ds:DragonslayerSpear a ds:Melee ;
+    schema:name "Dragonslayer Spear" ;
+    schema:description "Ornstein's legendary spear" ;
+    ds:weight 8.0 ;
+    ds:durability 300 ;
+    ds:strengthRequirement 24 ;
+    ds:dexterityRequirement 24 ;
+    ds:physicalDamage 95 ;
+    ds:droppedBy ds:OrnsteinAndSmough .
+
+ds:BalderSideSword a ds:Melee ;
+    schema:name "Balder Side Sword" ;
+    schema:description "Rare straight sword with excellent dexterity scaling" ;
+    ds:weight 3.0 ;
+    ds:durability 150 ;
+    ds:strengthRequirement 10 ;
+    ds:dexterityRequirement 14 ;
+    ds:physicalDamage 110 ;
+    ds:droppedBy ds:Balder .
+
+ds:GreatScythe a ds:Melee ;
+    schema:name "Great Scythe" ;
+    schema:description "Curved reaper with incredible reach" ;
+    ds:weight 5.0 ;
+    ds:durability 120 ;
+    ds:strengthRequirement 14 ;
+    ds:dexterityRequirement 14 ;
+    ds:physicalDamage 135 ;
+    ds:foundIn ds:Catacombs .
+
+ds:Moonlight a ds:Melee ;
+    schema:name "Moonlight Greatsword" ;
+    schema:description "Seath's magical greatsword" ;
+    ds:weight 6.0 ;
+    ds:durability 350 ;
+    ds:strengthRequirement 16 ;
+    ds:dexterityRequirement 10 ;
+    ds:intelligenceRequirement 28 ;
+    ds:magicDamage 240 ;
+    ds:droppedBy ds:SeathTheScaleless .
+
+ds:GreatClub a ds:Melee ;
+    schema:name "Great Club" ;
+    schema:description "Massive wooden club" ;
+    ds:weight 12.0 ;
+    ds:durability 280 ;
+    ds:strengthRequirement 26 ;
+    ds:physicalDamage 145 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:Rapier a ds:Melee ;
+    schema:name "Rapier" ;
+    schema:description "Thrusting sword favored by dexterous fighters" ;
+    ds:weight 2.0 ;
+    ds:durability 180 ;
+    ds:strengthRequirement 7 ;
+    ds:dexterityRequirement 12 ;
+    ds:physicalDamage 94 ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 600 .
+
+ds:Bandit a ds:Melee ;
+    schema:name "Bandit's Knife" ;
+    schema:description "Small dagger with bleed buildup" ;
+    ds:weight 1.5 ;
+    ds:durability 120 ;
+    ds:strengthRequirement 6 ;
+    ds:dexterityRequirement 12 ;
+    ds:physicalDamage 76 ;
+    ds:foundIn ds:UndeadBurg .
+
+ds:Shortbow a ds:Ranged ;
+    schema:name "Short Bow" ;
+    schema:description "Basic bow for ranged combat" ;
+    ds:weight 1.5 ;
+    ds:durability 80 ;
+    ds:strengthRequirement 7 ;
+    ds:dexterityRequirement 12 ;
+    ds:physicalDamage 48 ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 800 .
+
+ds:BlackBow a ds:Ranged ;
+    schema:name "Black Bow of Pharis" ;
+    schema:description "Legendary bow with incredible range" ;
+    ds:weight 2.0 ;
+    ds:durability 120 ;
+    ds:strengthRequirement 9 ;
+    ds:dexterityRequirement 18 ;
+    ds:physicalDamage 58 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:AveLightCrossbow a ds:Ranged ;
+    schema:name "Light Crossbow" ;
+    schema:description "Quick-loading crossbow" ;
+    ds:weight 3.0 ;
+    ds:durability 100 ;
+    ds:strengthRequirement 10 ;
+    ds:dexterityRequirement 8 ;
+    ds:physicalDamage 63 ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 1000 .
+
+ds:DragonslayerGreatbow a ds:Ranged ;
+    schema:name "Dragonslayer Greatbow" ;
+    schema:description "Massive bow used by Gough to slay dragons" ;
+    ds:weight 10.0 ;
+    ds:durability 150 ;
+    ds:strengthRequirement 30 ;
+    ds:dexterityRequirement 20 ;
+    ds:physicalDamage 95 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:AvelynCrossbow a ds:Ranged ;
+    schema:name "Avelyn" ;
+    schema:description "Repeating crossbow firing three bolts" ;
+    ds:weight 5.0 ;
+    ds:durability 100 ;
+    ds:strengthRequirement 14 ;
+    ds:dexterityRequirement 12 ;
+    ds:physicalDamage 78 ;
+    ds:foundIn ds:TheDukesArchives .
+
+# ============================================
+# ARMOR INDIVIDUALS (20 total)
+# ============================================
+
+ds:EliteKnightHelm a ds:Armor ;
+    schema:name "Elite Knight Helm" ;
+    schema:description "Well-crafted helmet of elite knights" ;
+    ds:weight 3.5 ;
+    ds:durability 450 ;
+    ds:physicalDefense 44 ;
+    ds:magicDefense 26 ;
+    ds:poise 4.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:EliteKnightArmor a ds:Armor ;
+    schema:name "Elite Knight Armor" ;
+    schema:description "Protective chest armor" ;
+    ds:weight 7.0 ;
+    ds:durability 450 ;
+    ds:physicalDefense 82 ;
+    ds:magicDefense 50 ;
+    ds:poise 17.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:EliteKnightGauntlets a ds:Armor ;
+    schema:name "Elite Knight Gauntlets" ;
+    schema:description "Sturdy metal gloves" ;
+    ds:weight 3.0 ;
+    ds:durability 450 ;
+    ds:physicalDefense 37 ;
+    ds:magicDefense 23 ;
+    ds:poise 3.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:EliteKnightLeggings a ds:Armor ;
+    schema:name "Elite Knight Leggings" ;
+    schema:description "Metal leg protection" ;
+    ds:weight 4.5 ;
+    ds:durability 450 ;
+    ds:physicalDefense 55 ;
+    ds:magicDefense 34 ;
+    ds:poise 7.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:BlackIronHelm a ds:Armor ;
+    schema:name "Black Iron Helm" ;
+    schema:description "Massive helmet with extreme defense" ;
+    ds:weight 7.2 ;
+    ds:durability 550 ;
+    ds:physicalDefense 60 ;
+    ds:magicDefense 31 ;
+    ds:poise 9.0 ;
+    ds:soldBy ds:DominhnallOfZena ;
+    ds:soulCost 5000 .
+
+ds:BlackIronArmor a ds:Armor ;
+    schema:name "Black Iron Armor" ;
+    schema:description "Heaviest armor with unmatched protection" ;
+    ds:weight 17.5 ;
+    ds:durability 550 ;
+    ds:physicalDefense 116 ;
+    ds:magicDefense 60 ;
+    ds:poise 40.0 ;
+    ds:soldBy ds:DominhnallOfZena ;
+    ds:soulCost 8000 .
+
+ds:BlackIronGauntlets a ds:Armor ;
+    schema:name "Black Iron Gauntlets" ;
+    schema:description "Incredibly heavy metal gauntlets" ;
+    ds:weight 6.6 ;
+    ds:durability 550 ;
+    ds:physicalDefense 52 ;
+    ds:magicDefense 27 ;
+    ds:poise 8.0 ;
+    ds:soldBy ds:DominhnallOfZena ;
+    ds:soulCost 4000 .
+
+ds:BlackIronLeggings a ds:Armor ;
+    schema:name "Black Iron Leggings" ;
+    schema:description "Heavy leg armor for maximum defense" ;
+    ds:weight 10.4 ;
+    ds:durability 550 ;
+    ds:physicalDefense 76 ;
+    ds:magicDefense 39 ;
+    ds:poise 16.0 ;
+    ds:soldBy ds:DominhnallOfZena ;
+    ds:soulCost 6000 .
+
+ds:HavelHelm a ds:Armor ;
+    schema:name "Havel's Helm" ;
+    schema:description "Stone helmet of legendary knight Havel" ;
+    ds:weight 7.5 ;
+    ds:durability 700 ;
+    ds:physicalDefense 64 ;
+    ds:magicDefense 41 ;
+    ds:poise 11.0 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:HavelArmor a ds:Armor ;
+    schema:name "Havel's Armor" ;
+    schema:description "Carved from solid rock" ;
+    ds:weight 20.0 ;
+    ds:durability 700 ;
+    ds:physicalDefense 124 ;
+    ds:magicDefense 79 ;
+    ds:poise 48.0 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:SilverKnightHelm a ds:Armor ;
+    schema:name "Silver Knight Helm" ;
+    schema:description "Helmet of Anor Londo's elite guards" ;
+    ds:weight 4.4 ;
+    ds:durability 480 ;
+    ds:physicalDefense 50 ;
+    ds:magicDefense 30 ;
+    ds:poise 6.0 ;
+    ds:droppedBy ds:SilverKnight .
+
+ds:SilverKnightArmor a ds:Armor ;
+    schema:name "Silver Knight Armor" ;
+    schema:description "Shining chest armor of silver knights" ;
+    ds:weight 9.0 ;
+    ds:durability 480 ;
+    ds:physicalDefense 92 ;
+    ds:magicDefense 56 ;
+    ds:poise 22.0 ;
+    ds:droppedBy ds:SilverKnight .
+
+ds:GoldHemmedHood a ds:Armor ;
+    schema:name "Gold-Hemmed Black Hood" ;
+    schema:description "Mysterious hood with excellent fire resistance" ;
+    ds:weight 1.5 ;
+    ds:durability 250 ;
+    ds:physicalDefense 29 ;
+    ds:magicDefense 22 ;
+    ds:poise 0.0 ;
+    ds:foundIn ds:QuelaagsDomain .
+
+ds:GoldHemmedRobe a ds:Armor ;
+    schema:name "Gold-Hemmed Black Robes" ;
+    schema:description "Black robes with gold trim" ;
+    ds:weight 3.0 ;
+    ds:durability 250 ;
+    ds:physicalDefense 54 ;
+    ds:magicDefense 42 ;
+    ds:poise 0.0 ;
+    ds:foundIn ds:QuelaagsDomain .
+
+ds:TatteredCloth a ds:Armor ;
+    schema:name "Tattered Cloth Hood" ;
+    schema:description "Worn pyromancer hood" ;
+    ds:weight 0.5 ;
+    ds:durability 200 ;
+    ds:physicalDefense 15 ;
+    ds:magicDefense 12 ;
+    ds:poise 0.0 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:TatteredRobe a ds:Armor ;
+    schema:name "Tattered Cloth Robe" ;
+    schema:description "Light cloth robes for mobility" ;
+    ds:weight 1.0 ;
+    ds:durability 200 ;
+    ds:physicalDefense 28 ;
+    ds:magicDefense 22 ;
+    ds:poise 0.0 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:ChainmailHelm a ds:Armor ;
+    schema:name "Chainmail Helm" ;
+    schema:description "Standard knight helmet" ;
+    ds:weight 2.8 ;
+    ds:durability 380 ;
+    ds:physicalDefense 38 ;
+    ds:magicDefense 20 ;
+    ds:poise 3.0 ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 2000 .
+
+ds:ChainmailArmor a ds:Armor ;
+    schema:name "Chainmail Armor" ;
+    schema:description "Basic metal chest protection" ;
+    ds:weight 6.0 ;
+    ds:durability 380 ;
+    ds:physicalDefense 71 ;
+    ds:magicDefense 38 ;
+    ds:poise 12.0 ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 3500 .
+
+ds:CrystalHelm a ds:Armor ;
+    schema:name "Crystalline Helm" ;
+    schema:description "Helmet made of magical crystal" ;
+    ds:weight 4.0 ;
+    ds:durability 150 ;
+    ds:physicalDefense 56 ;
+    ds:magicDefense 46 ;
+    ds:poise 7.0 ;
+    ds:foundIn ds:TheDukesArchives .
+
+ds:CrystalArmor a ds:Armor ;
+    schema:name "Crystalline Armor" ;
+    schema:description "Brittle but powerful crystal protection" ;
+    ds:weight 8.5 ;
+    ds:durability 150 ;
+    ds:physicalDefense 104 ;
+    ds:magicDefense 85 ;
+    ds:poise 26.0 ;
+    ds:foundIn ds:TheDukesArchives .
+
+# ============================================
+# SHIELD INDIVIDUALS (20 total)
+# ============================================
+
+ds:HeaterShield a ds:Shield ;
+    schema:name "Heater Shield" ;
+    schema:description "Standard medium shield" ;
+    ds:weight 3.0 ;
+    ds:durability 180 ;
+    ds:stability 52 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 30.0 ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 1000 .
+
+ds:BaotleShield a ds:Shield ;
+    schema:name "Balder Shield" ;
+    schema:description "Shield of Balder knights" ;
+    ds:weight 5.0 ;
+    ds:durability 200 ;
+    ds:stability 57 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 43.0 ;
+    ds:droppedBy ds:Balder .
+
+ds:BlackKnightShield a ds:Shield ;
+    schema:name "Black Knight Shield" ;
+    schema:description "Greatshield with excellent fire resistance" ;
+    ds:weight 7.0 ;
+    ds:durability 300 ;
+    ds:stability 72 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 65.0 ;
+    ds:droppedBy ds:BlackKnight .
+
+ds:SilverKnightShield a ds:Shield ;
+    schema:name "Silver Knight Shield" ;
+    schema:description "Elegant shield of Anor Londo guards" ;
+    ds:weight 5.5 ;
+    ds:durability 260 ;
+    ds:stability 65 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 55.0 ;
+    ds:droppedBy ds:SilverKnight .
+
+ds:HavelShield a ds:Shield ;
+    schema:name "Havel's Greatshield" ;
+    schema:description "Massive stone greatshield" ;
+    ds:weight 16.0 ;
+    ds:durability 800 ;
+    ds:stability 84 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 90.0 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:GrassshieldCrest a ds:Shield ;
+    schema:name "Grass Crest Shield" ;
+    schema:description "Shield that boosts stamina recovery" ;
+    ds:weight 3.5 ;
+    ds:durability 220 ;
+    ds:stability 51 ;
+    ds:physicalReduction 95.0 ;
+    ds:magicReduction 30.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:CrestShield a ds:Shield ;
+    schema:name "Crest Shield" ;
+    schema:description "Shield with high magic defense" ;
+    ds:weight 3.0 ;
+    ds:durability 180 ;
+    ds:stability 53 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 80.0 ;
+    ds:foundIn ds:UndeadParish .
+
+ds:SpiderShield a ds:Shield ;
+    schema:name "Spider Shield" ;
+    schema:description "Shield with poison and toxic resistance" ;
+    ds:weight 4.0 ;
+    ds:durability 200 ;
+    ds:stability 56 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 35.0 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:TowerKiteShield a ds:Shield ;
+    schema:name "Tower Kite Shield" ;
+    schema:description "Large kite shield with good stability" ;
+    ds:weight 5.5 ;
+    ds:durability 240 ;
+    ds:stability 61 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 45.0 ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 2000 .
+
+ds:Eagle a ds:Shield ;
+    schema:name "Eagle Shield" ;
+    schema:description "Greatshield decorated with eagle" ;
+    ds:weight 6.0 ;
+    ds:durability 280 ;
+    ds:stability 68 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 55.0 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:CaducausShield a ds:Shield ;
+    schema:name "Caduceus Round Shield" ;
+    schema:description "Shield bearing the caduceus symbol" ;
+    ds:weight 3.5 ;
+    ds:durability 200 ;
+    ds:stability 54 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 60.0 ;
+    ds:soldBy ds:Patches ;
+    ds:soulCost 5000 .
+
+ds:BucklerShield a ds:Shield ;
+    schema:name "Buckler" ;
+    schema:description "Small shield for parrying" ;
+    ds:weight 1.5 ;
+    ds:durability 120 ;
+    ds:stability 36 ;
+    ds:physicalReduction 67.0 ;
+    ds:magicReduction 20.0 ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 800 .
+
+ds:TargetShield a ds:Shield ;
+    schema:name "Target Shield" ;
+    schema:description "Small shield optimized for parrying" ;
+    ds:weight 2.0 ;
+    ds:durability 140 ;
+    ds:stability 42 ;
+    ds:physicalReduction 75.0 ;
+    ds:magicReduction 25.0 ;
+    ds:foundIn ds:UndeadParish .
+
+ds:CrystalRingShield a ds:Shield ;
+    schema:name "Crystal Ring Shield" ;
+    schema:description "Magical shield that shoots projectiles" ;
+    ds:weight 3.5 ;
+    ds:durability 150 ;
+    ds:stability 50 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 70.0 ;
+    ds:foundIn ds:TheDukesArchives .
+
+ds:BlackIronShield a ds:Shield ;
+    schema:name "Black Iron Greatshield" ;
+    schema:description "Heavy greatshield with excellent stability" ;
+    ds:weight 12.0 ;
+    ds:durability 500 ;
+    ds:stability 80 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 75.0 ;
+    ds:soldBy ds:DominhnallOfZena ;
+    ds:soulCost 10000 .
+
+ds:SkullLant a ds:Shield ;
+    schema:name "Skull Lantern" ;
+    schema:description "Lantern that provides light in darkness" ;
+    ds:weight 3.0 ;
+    ds:durability 100 ;
+    ds:stability 30 ;
+    ds:physicalReduction 50.0 ;
+    ds:magicReduction 20.0 ;
+    ds:droppedBy ds:GiantSkeleton .
+
+ds:PierceShield a ds:Shield ;
+    schema:name "Pierce Shield" ;
+    schema:description "Spiked shield that damages attackers" ;
+    ds:weight 5.0 ;
+    ds:durability 220 ;
+    ds:stability 58 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 40.0 ;
+    ds:foundIn ds:SensFortress .
+
+ds:CrystalShield a ds:Shield ;
+    schema:name "Crystal Shield" ;
+    schema:description "Magically reinforced shield" ;
+    ds:weight 4.0 ;
+    ds:durability 160 ;
+    ds:stability 60 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 85.0 ;
+    ds:foundIn ds:TheDukesArchives .
+
+ds:DragonCrestShield a ds:Shield ;
+    schema:name "Dragon Crest Shield" ;
+    schema:description "Shield with dragon emblem and fire resistance" ;
+    ds:weight 4.5 ;
+    ds:durability 240 ;
+    ds:stability 62 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 50.0 ;
+    ds:foundIn ds:UndeadParish .
+
+ds:GreatshieldArtorias a ds:Shield ;
+    schema:name "Greatshield of Artorias" ;
+    schema:description "Legendary shield of Artorias" ;
+    ds:weight 10.0 ;
+    ds:durability 600 ;
+    ds:stability 88 ;
+    ds:physicalReduction 100.0 ;
+    ds:magicReduction 80.0 ;
+    ds:droppedBy ds:SifTheGreatWolf .
+
+# ============================================
+# RING INDIVIDUALS (20 total)
+# ============================================
+
+ds:HavelRing a ds:Ring ;
+    schema:name "Havel's Ring" ;
+    schema:description "Increases maximum equipment load by 50%" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:RingOfFavorAndProtection a ds:Ring ;
+    schema:name "Ring of Favor and Protection" ;
+    schema:description "Increases HP, stamina, and equip load but breaks when removed" ;
+    ds:weight 0.0 ;
+    ds:droppedBy ds:Lautrec .
+
+ds:BellowingDragonCrestRing a ds:Ring ;
+    schema:name "Bellowing Dragoncrest Ring" ;
+    schema:description "Boosts sorcery damage by 20%" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:UndeadParish .
+
+ds:RingOfSteelProtection a ds:Ring ;
+    schema:name "Ring of Steel Protection" ;
+    schema:description "Increases physical and elemental defense" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:SensFortress .
+
+ds:WolfRing a ds:Ring ;
+    schema:name "Wolf Ring" ;
+    schema:description "Greatly increases poise" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:DarkrootGarden ;
+    ds:droppedBy ds:Alvina .
+
+ds:HornetRing a ds:Ring ;
+    schema:name "Hornet Ring" ;
+    schema:description "Boosts critical attack damage" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:RedTearstoneRing a ds:Ring ;
+    schema:name "Red Tearstone Ring" ;
+    schema:description "Boosts attack when HP is low" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:Catacombs .
+
+ds:BlueTearstoneRing a ds:Ring ;
+    schema:name "Blue Tearstone Ring" ;
+    schema:description "Boosts defense when HP is low" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:UndeadBurg .
+
+ds:RingOfTheSunsFirstborn a ds:Ring ;
+    schema:name "Ring of the Sun's Firstborn" ;
+    schema:description "Strengthens miracles" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:DarkWoodGrainRing a ds:Ring ;
+    schema:name "Dark Wood Grain Ring" ;
+    schema:description "Allows ninja flipping under 25% equip load" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:RingOfSacrifice a ds:Ring ;
+    schema:name "Ring of Sacrifice" ;
+    schema:description "Prevents loss of souls and humanity on death, breaks after use" ;
+    ds:weight 0.0 ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 5000 .
+
+ds:RareRingOfSacrifice a ds:Ring ;
+    schema:name "Rare Ring of Sacrifice" ;
+    schema:description "Prevents hollowing and loss of souls on death" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:FirelinkShrine .
+
+ds:CovenantOfArtorias a ds:Ring ;
+    schema:name "Covenant of Artorias" ;
+    schema:description "Allows traversal of the Abyss" ;
+    ds:weight 0.0 ;
+    ds:droppedBy ds:SifTheGreatWolf .
+
+ds:RustedIronRing a ds:Ring ;
+    schema:name "Rusted Iron Ring" ;
+    schema:description "Allows normal movement in swamp and water" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:UndeadBurg .
+
+ds:SlumberingDragoncrestRing a ds:Ring ;
+    schema:name "Slumbering Dragoncrest Ring" ;
+    schema:description "Silences player movement" ;
+    ds:weight 0.0 ;
+    ds:soldBy ds:Griggs ;
+    ds:soulCost 20000 .
+
+ds:LeoRing a ds:Ring ;
+    schema:name "Leo Ring" ;
+    schema:description "Boosts thrust attack counter damage" ;
+    ds:weight 0.0 ;
+    ds:droppedBy ds:OrnsteinAndSmough .
+
+ds:ClorantyRing a ds:Ring ;
+    schema:name "Cloranty Ring" ;
+    schema:description "Increases stamina regeneration" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:TinyBeingRing a ds:Ring ;
+    schema:name "Tiny Being's Ring" ;
+    schema:description "Slightly increases maximum HP" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:FirelinkShrine .
+
+ds:CursebiteRing a ds:Ring ;
+    schema:name "Cursebite Ring" ;
+    schema:description "Increases curse resistance" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:NewLondoRuins .
+
+ds:PoisonbiteRing a ds:Ring ;
+    schema:name "Poisonbite Ring" ;
+    schema:description "Increases poison and toxic resistance" ;
+    ds:weight 0.0 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+# ============================================
+# SPELL INDIVIDUALS
+# ============================================
+
+# Sorceries
+ds:SoulArrow a ds:Sorcery ;
+    schema:name "Soul Arrow" ;
+    schema:description "Basic projectile sorcery" ;
+    ds:intelligenceRequirement 12 ;
+    ds:uses 30 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Griggs ;
+    ds:soulCost 1000 .
+
+ds:GreatSoulArrow a ds:Sorcery ;
+    schema:name "Great Soul Arrow" ;
+    schema:description "Stronger soul projectile" ;
+    ds:intelligenceRequirement 14 ;
+    ds:uses 15 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Griggs ;
+    ds:soulCost 3000 .
+
+ds:HeavySoulArrow a ds:Sorcery ;
+    schema:name "Heavy Soul Arrow" ;
+    schema:description "Powerful soul projectile" ;
+    ds:intelligenceRequirement 16 ;
+    ds:uses 12 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Griggs ;
+    ds:soulCost 5000 .
+
+ds:SoulSpear a ds:Sorcery ;
+    schema:name "Soul Spear" ;
+    schema:description "Extremely powerful piercing projectile" ;
+    ds:intelligenceRequirement 36 ;
+    ds:uses 4 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Griggs ;
+    ds:soulCost 40000 .
+
+ds:HushSorcery a ds:Sorcery ;
+    schema:name "Hush" ;
+    schema:description "Silences movement" ;
+    ds:intelligenceRequirement 15 ;
+    ds:uses 3 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Griggs ;
+    ds:soulCost 10000 .
+
+ds:CrystalMagicWeapon a ds:Sorcery ;
+    schema:name "Crystal Magic Weapon" ;
+    schema:description "Powerful magic weapon enchantment" ;
+    ds:intelligenceRequirement 25 ;
+    ds:uses 3 ;
+    ds:slots 1 ;
+    ds:foundIn ds:TheDukesArchives .
+
+ds:DarkBead a ds:Sorcery ;
+    schema:name "Dark Bead" ;
+    schema:description "Fires dark magic orb with immense power" ;
+    ds:intelligenceRequirement 16 ;
+    ds:uses 6 ;
+    ds:slots 1 ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:WhiteDragonBreath a ds:Sorcery ;
+    schema:name "White Dragon Breath" ;
+    schema:description "Breathe Seath's crystalline breath" ;
+    ds:intelligenceRequirement 50 ;
+    ds:uses 1 ;
+    ds:slots 2 ;
+    ds:droppedBy ds:SeathTheScaleless .
+
+# Miracles
+ds:Heal a ds:Miracle ;
+    schema:name "Heal" ;
+    schema:description "Basic healing miracle" ;
+    ds:faithRequirement 12 ;
+    ds:uses 5 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Petrus ;
+    ds:soulCost 1000 .
+
+ds:GreatHeal a ds:Miracle ;
+    schema:name "Great Heal" ;
+    schema:description "Powerful healing miracle" ;
+    ds:faithRequirement 25 ;
+    ds:uses 3 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Petrus ;
+    ds:soulCost 8000 .
+
+ds:GreatHealExcerpt a ds:Miracle ;
+    schema:name "Great Heal Excerpt" ;
+    schema:description "Moderate healing miracle" ;
+    ds:faithRequirement 18 ;
+    ds:uses 5 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Petrus ;
+    ds:soulCost 4000 .
+
+ds:ForceSpell a ds:Miracle ;
+    schema:name "Force" ;
+    schema:description "Shockwave that repels enemies" ;
+    ds:faithRequirement 12 ;
+    ds:uses 10 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Petrus ;
+    ds:soulCost 2000 .
+
+ds:WrathOfTheGods a ds:Miracle ;
+    schema:name "Wrath of the Gods" ;
+    schema:description "Devastating area-of-effect miracle" ;
+    ds:faithRequirement 28 ;
+    ds:uses 3 ;
+    ds:slots 1 ;
+    ds:foundIn ds:TombOfTheGiants .
+
+ds:LightningSpear a ds:Miracle ;
+    schema:name "Lightning Spear" ;
+    schema:description "Hurls lightning bolt" ;
+    ds:faithRequirement 20 ;
+    ds:uses 10 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Petrus ;
+    ds:soulCost 6000 .
+
+ds:GreatLightningSpear a ds:Miracle ;
+    schema:name "Great Lightning Spear" ;
+    schema:description "Powerful lightning bolt" ;
+    ds:faithRequirement 30 ;
+    ds:uses 5 ;
+    ds:slots 1 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:SunlightSpear a ds:Miracle ;
+    schema:name "Sunlight Spear" ;
+    schema:description "Ultimate lightning miracle" ;
+    ds:faithRequirement 50 ;
+    ds:uses 3 ;
+    ds:slots 1 ;
+    ds:foundIn ds:AnorLondo .
+
+ds:Homeward a ds:Miracle ;
+    schema:name "Homeward" ;
+    schema:description "Returns to last bonfire" ;
+    ds:faithRequirement 18 ;
+    ds:uses 1 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Petrus ;
+    ds:soulCost 3000 .
+
+# Pyromancies
+ds:Fireball a ds:Pyromancy ;
+    schema:name "Fireball" ;
+    schema:description "Basic fire projectile" ;
+    ds:uses 8 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Laurentius ;
+    ds:soulCost 500 .
+
+ds:GreatFireball a ds:Pyromancy ;
+    schema:name "Great Fireball" ;
+    schema:description "Larger fire projectile" ;
+    ds:uses 6 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Laurentius ;
+    ds:soulCost 3000 .
+
+ds:GreatChaosFireball a ds:Pyromancy ;
+    schema:name "Great Chaos Fireball" ;
+    schema:description "Massive fireball that leaves lava" ;
+    ds:uses 4 ;
+    ds:slots 2 ;
+    ds:taughtBy ds:Quelana ;
+    ds:soulCost 10000 .
+
+ds:FireTempest a ds:Pyromancy ;
+    schema:name "Fire Tempest" ;
+    schema:description "Pillars of flame erupt around caster" ;
+    ds:uses 4 ;
+    ds:slots 2 ;
+    ds:taughtBy ds:Quelana ;
+    ds:soulCost 15000 .
+
+ds:ChaosStorm a ds:Pyromancy ;
+    schema:name "Chaos Storm" ;
+    schema:description "Most powerful area flame attack" ;
+    ds:uses 2 ;
+    ds:slots 2 ;
+    ds:droppedBy ds:BedOfChaos .
+
+ds:FireWhip a ds:Pyromancy ;
+    schema:name "Fire Whip" ;
+    schema:description "Sweeping fire attack" ;
+    ds:uses 4 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Quelana ;
+    ds:soulCost 8000 .
+
+ds:CombustionSpell a ds:Pyromancy ;
+    schema:name "Combustion" ;
+    schema:description "Point-blank fire burst" ;
+    ds:uses 12 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Laurentius ;
+    ds:soulCost 1500 .
+
+ds:PowerWithin a ds:Pyromancy ;
+    schema:name "Power Within" ;
+    schema:description "Boosts attack but drains health" ;
+    ds:uses 1 ;
+    ds:slots 1 ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:IronFlesh a ds:Pyromancy ;
+    schema:name "Iron Flesh" ;
+    schema:description "Hardens body for extreme defense" ;
+    ds:uses 2 ;
+    ds:slots 1 ;
+    ds:taughtBy ds:Laurentius ;
+    ds:soulCost 5000 .
+
+# ============================================
+# CONSUMABLE INDIVIDUALS
+# ============================================
+
+ds:EstusFlask a ds:Consumable ;
+    schema:name "Estus Flask" ;
+    schema:description "Refillable healing flask" ;
+    ds:foundIn ds:UndeadBurg .
+
+ds:HumanityItem a ds:Consumable ;
+    schema:name "Humanity" ;
+    schema:description "Restores humanity and heals" ;
+    ds:droppedBy ds:HollowSoldier .
+
+ds:GreenBlossom a ds:Consumable ;
+    schema:name "Green Blossom" ;
+    schema:description "Temporarily boosts stamina recovery" ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 1000 .
+
+ds:ElizabethMushroom a ds:Consumable ;
+    schema:name "Elizabeth's Mushroom" ;
+    schema:description "Powerful healing mushroom" ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:DivineBlessing a ds:Consumable ;
+    schema:name "Divine Blessing" ;
+    schema:description "Fully restores HP and removes ailments" ;
+    ds:foundIn ds:SensFortress .
+
+ds:PurpleMoss a ds:Consumable ;
+    schema:name "Blooming Purple Moss Clump" ;
+    schema:description "Cures poison and toxic" ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 1500 .
+
+ds:FirebombConsumable a ds:Consumable ;
+    schema:name "Firebomb" ;
+    schema:description "Throwable explosive" ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 50 .
+
+ds:BlackFirebomb a ds:Consumable ;
+    schema:name "Black Firebomb" ;
+    schema:description "Powerful explosive" ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 200 .
+
+ds:TransientCurse a ds:Consumable ;
+    schema:name "Transient Curse" ;
+    schema:description "Temporarily allows damage to ghosts" ;
+    ds:foundIn ds:NewLondoRuins ;
+    ds:soldBy ds:Ingward ;
+    ds:soulCost 4000 .
+
+ds:PrismStone a ds:Consumable ;
+    schema:name "Prism Stone" ;
+    schema:description "Glowing stone to mark paths and test fall distance" ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 10 .
+
+# ============================================
+# UPGRADE MATERIAL INDIVIDUALS
+# ============================================
+
+ds:TitaniteShard a ds:UpgradeMaterial ;
+    schema:name "Titanite Shard" ;
+    schema:description "Reinforces equipment to +5" ;
+    ds:droppedBy ds:HollowSoldier ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 800 .
+
+ds:LargeTitaniteShard a ds:UpgradeMaterial ;
+    schema:name "Large Titanite Shard" ;
+    schema:description "Reinforces equipment to +10" ;
+    ds:droppedBy ds:Balder ;
+    ds:soldBy ds:GiantBlacksmith ;
+    ds:soulCost 3800 .
+
+ds:TitaniteChunk a ds:UpgradeMaterial ;
+    schema:name "Titanite Chunk" ;
+    schema:description "Reinforces equipment to +14" ;
+    ds:droppedBy ds:BlackKnight ;
+    ds:foundIn ds:AnorLondo .
+
+ds:TitaniteSlab a ds:UpgradeMaterial ;
+    schema:name "Titanite Slab" ;
+    schema:description "Reinforces equipment to maximum" ;
+    ds:foundIn ds:AnorLondo .
+
+ds:GreenTitaniteShard a ds:UpgradeMaterial ;
+    schema:name "Green Titanite Shard" ;
+    schema:description "Magic and Divine weapon reinforcement" ;
+    ds:droppedBy ds:InfectedBarbarian ;
+    ds:foundIn ds:BlighttownSwamp .
+
+ds:BlueTitaniteChunk a ds:UpgradeMaterial ;
+    schema:name "Blue Titanite Chunk" ;
+    schema:description "Magic weapon reinforcement" ;
+    ds:droppedBy ds:CrystalGolem ;
+    ds:foundIn ds:DarkrootGarden .
+
+ds:WhiteTitaniteChunk a ds:UpgradeMaterial ;
+    schema:name "White Titanite Chunk" ;
+    schema:description "Divine weapon reinforcement" ;
+    ds:droppedBy ds:GiantSkeleton ;
+    ds:foundIn ds:TombOfTheGiants .
+
+ds:RedTitaniteChunk a ds:UpgradeMaterial ;
+    schema:name "Red Titanite Chunk" ;
+    schema:description "Chaos and Fire weapon reinforcement" ;
+    ds:foundIn ds:LostIzalith .
+
+ds:TwinklingTitanite a ds:UpgradeMaterial ;
+    schema:name "Twinkling Titanite" ;
+    schema:description "Unique weapon reinforcement" ;
+    ds:droppedBy ds:CrystalGolem ;
+    ds:soldBy ds:GiantBlacksmith ;
+    ds:soulCost 8000 .
+
+ds:DemonTitanite a ds:UpgradeMaterial ;
+    schema:name "Demon Titanite" ;
+    schema:description "Boss weapon reinforcement" ;
+    ds:droppedBy ds:TaurusDemon ;
+    ds:foundIn ds:AnorLondo .
+
+# ============================================
+# KEY ITEM INDIVIDUALS
+# ============================================
+
+ds:ResidenceKey a ds:KeyItem ;
+    schema:name "Residence Key" ;
+    schema:description "Opens the lower Undead Burg door" ;
+    ds:soldBy ds:UndeadMerchant ;
+    ds:soulCost 1000 .
+
+ds:BasementKey a ds:KeyItem ;
+    schema:name "Basement Key" ;
+    schema:description "Opens door to Lower Undead Burg" ;
+    ds:droppedBy ds:TaurusDemon .
+
+ds:CrestOfArtorias a ds:KeyItem ;
+    schema:name "Crest of Artorias" ;
+    schema:description "Opens sealed door in Darkroot Garden" ;
+    ds:soldBy ds:AndreOfAstora ;
+    ds:soulCost 20000 .
+
+ds:LordvesselKey a ds:KeyItem ;
+    schema:name "Lordvessel" ;
+    schema:description "Sacred vessel to transport to bonfires" ;
+    ds:foundIn ds:AnorLondo .
+
+ds:PeculiarDoll a ds:KeyItem ;
+    schema:name "Peculiar Doll" ;
+    schema:description "Returns to Undead Asylum" ;
+    ds:foundIn ds:UndeadBurg .
+
+ds:BrokenPendant a ds:KeyItem ;
+    schema:name "Broken Pendant" ;
+    schema:description "Mysterious broken pendant" ;
+    ds:foundIn ds:TheDukesArchives .
+
+ds:KeyToTheSeal a ds:KeyItem ;
+    schema:name "Key to the Seal" ;
+    schema:description "Opens floodgates of New Londo" ;
+    ds:soldBy ds:Ingward .
+
+ds:DarkSignItem a ds:KeyItem ;
+    schema:name "Darksign" ;
+    schema:description "Mark of the Undead" ;
+    ds:foundIn ds:UndeadBurg .
+
+# ============================================
+# UPGRADE PATH INDIVIDUALS
+# ============================================
+
+ds:NormalUpgradePath a ds:UpgradePath ;
+    schema:name "Normal Upgrade Path" ;
+    schema:description "Standard weapon reinforcement" ;
+    ds:requiresItem ds:TitaniteShard, ds:LargeTitaniteShard, ds:TitaniteChunk, ds:TitaniteSlab ;
+    ds:performsUpgrade ds:AndreOfAstora .
+
+ds:FireUpgradePath a ds:UpgradePath ;
+    schema:name "Fire Upgrade Path" ;
+    schema:description "Adds fire damage, removes scaling" ;
+    ds:requiresItem ds:GreenTitaniteShard, ds:RedTitaniteChunk ;
+    ds:performsUpgrade ds:Vamos .
+
+ds:LightningUpgradePath a ds:UpgradePath ;
+    schema:name "Lightning Upgrade Path" ;
+    schema:description "Adds lightning damage, removes scaling" ;
+    ds:requiresItem ds:TitaniteChunk, ds:TitaniteSlab ;
+    ds:performsUpgrade ds:GiantBlacksmith .
+
+ds:MagicUpgradePath a ds:UpgradePath ;
+    schema:name "Magic Upgrade Path" ;
+    schema:description "Adds magic damage, intelligence scaling" ;
+    ds:requiresItem ds:GreenTitaniteShard, ds:BlueTitaniteChunk ;
+    ds:performsUpgrade ds:AndreOfAstora .
+
+ds:DivineUpgradePath a ds:UpgradePath ;
+    schema:name "Divine Upgrade Path" ;
+    schema:description "Adds divine damage, faith scaling" ;
+    ds:requiresItem ds:GreenTitaniteShard, ds:WhiteTitaniteChunk ;
+    ds:performsUpgrade ds:AndreOfAstora .
+
+ds:ChaosUpgradePath a ds:UpgradePath ;
+    schema:name "Chaos Upgrade Path" ;
+    schema:description "Adds fire damage, scales with humanity" ;
+    ds:requiresItem ds:RedTitaniteChunk ;
+    ds:performsUpgrade ds:Vamos .
+
+# ============================================
+# ADDITIONAL AREAS
+# ============================================
+
+ds:KilnOfTheFirstFlame a ds:Area ;
+    schema:name "Kiln of the First Flame" ;
+    schema:description "Final area where Gwyn awaits" .
+ds:StrayDemon a ds:Boss ;
+    schema:name "Stray Demon" ;
+    schema:description "Stronger version of Asylum Demon found in Northern Undead Asylum" ;
+    ds:locatedIn ds:UndeadAsylum ;
+    ds:healthPoints 4499 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:FireDamage, ds:LightningDamage ;
+    ds:resistantTo ds:PhysicalDamage ;
+    ds:drops ds:StrayDemonSoul .
+
+ds:MoonlightButterfly a ds:Boss ;
+    schema:name "Moonlight Butterfly" ;
+    schema:description "Magical butterfly created by Seath's experiments" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 1192 ;
+    ds:souls 10000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:MoonlightButterflySoul .
+
+ds:GreyWolfSif a ds:Boss ;
+    schema:name "Great Grey Wolf Sif" ;
+    schema:description "Loyal wolf companion of Artorias" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 3432 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:SifSoul .
+
+ds:DemonFiresage a ds:Boss ;
+    schema:name "Demon Firesage" ;
+    schema:description "Fire-wielding demon in the Demon Ruins" ;
+    ds:locatedIn ds:DemonRuins ;
+    ds:healthPoints 3599 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:DemonFiresageSoul .
+
+ds:CentipedeDemon a ds:Boss ;
+    schema:name "Ceaseless Discharge" ;
+    schema:description "Tortured demon perpetually burning with lava" ;
+    ds:locatedIn ds:DemonRuins ;
+    ds:healthPoints 3188 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:CeaselessDischargeSoul .
+
+ds:CentipedeDemonActual a ds:Boss ;
+    schema:name "Centipede Demon" ;
+    schema:description "Multi-limbed demon in the lava lake" ;
+    ds:locatedIn ds:LostIzalith ;
+    ds:healthPoints 4536 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:CentipedeDemonSoul .
+
+ds:PriscillaCrossbreed a ds:Boss ;
+    schema:name "Crossbreed Priscilla" ;
+    schema:description "Half-dragon outcast hidden in the Painted World" ;
+    ds:locatedIn ds:PaintedWorld ;
+    ds:healthPoints 1880 ;
+    ds:souls 30000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:PriscillaSoul .
+
+ds:DarkSunGwyndolinBoss a ds:Boss ;
+    schema:name "Dark Sun Gwyndolin" ;
+    schema:description "Optional boss, Dark Sun and master of illusions" ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:healthPoints 2091 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:GwyndolinSoul .
+
+# DLC BOSSES (Artorias of the Abyss)
+
+ds:SanctuaryGuardian a ds:Boss ;
+    schema:name "Sanctuary Guardian" ;
+    schema:description "Chimeric guardian of the Royal Wood" ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 2955 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:SanctuaryGuardianSoul .
+
+ds:ArtoriasTheAbysswalker a ds:Boss ;
+    schema:name "Knight Artorias" ;
+    schema:description "Legendary knight corrupted by the Abyss" ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 3750 ;
+    ds:souls 50000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:ArtoriasSoul .
+
+ds:BlackDragonKalameet a ds:Boss ;
+    schema:name "Black Dragon Kalameet" ;
+    schema:description "Ancient black dragon with one eye" ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 5665 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage, ds:MagicDamage ;
+    ds:drops ds:KalameetSoul .
+
+ds:Manus a ds:Boss ;
+    schema:name "Manus, Father of the Abyss" ;
+    schema:description "Primeval human whose soul became maddened" ;
+    ds:locatedIn ds:Chasm ;
+    ds:healthPoints 6665 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:ManusSoul .
+
+# ADDITIONAL BOSS SOULS
+# Note: Boss Souls are both BossSoul AND Item (can be consumed or used for crafting)
+
+ds:StrayDemonSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of a Stray Demon" ;
+    schema:description "Soul of the Stray Demon. Can be consumed for souls or used to create unique items" ;
+    ds:soulCost 20000 .
+
+ds:MoonlightButterflySoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Moonlight Butterfly" ;
+    schema:description "Soul of Seath's magical creation. Can be consumed or used to create the Crystal Ring Shield" ;
+    ds:soulCost 10000 .
+
+ds:DemonFiresageSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Demon Firesage" ;
+    schema:description "Soul of the fire-wielding demon. Can be consumed or used to create the Firesage Catalyst" ;
+    ds:soulCost 20000 .
+
+ds:CeaselessDischargeSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Ceaseless Discharge" ;
+    schema:description "Soul of the perpetually burning demon. Can be consumed or used to create unique items" ;
+    ds:soulCost 20000 .
+
+ds:CentipedeDemonSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Centipede Demon" ;
+    schema:description "Soul of the multi-limbed demon. Can be consumed or used to create the Orange Charred Ring" ;
+    ds:soulCost 40000 .
+
+ds:PriscillaSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Priscilla" ;
+    schema:description "Soul of the Crossbreed. Can be consumed or used to create the Lifehunt Scythe" ;
+    ds:soulCost 30000 .
+
+ds:GwyndolinSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Gwyndolin" ;
+    schema:description "Soul of the Dark Sun. Can be consumed or used to create the Darkmoon Bow or Tin Darkmoon Catalyst" ;
+    ds:soulCost 40000 .
+
+ds:SanctuaryGuardianSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Sanctuary Guardian" ;
+    schema:description "Soul of the chimeric guardian. Can be consumed or used to create the Sanctuary Guardian weapons" ;
+    ds:soulCost 20000 .
+
+ds:ArtoriasSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Artorias" ;
+    schema:description "Soul of the legendary Abysswalker. Can be consumed or used to create weapons or the Abyss Greatsword" ;
+    ds:soulCost 50000 .
+
+ds:KalameetSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Kalameet" ;
+    schema:description "Soul of the ancient black dragon. Can be consumed or used to create unique weapons" ;
+    ds:soulCost 60000 .
+
+ds:ManusSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Manus" ;
+    schema:description "Soul of the Father of the Abyss. Can be consumed or used to create powerful dark sorceries" ;
+    ds:soulCost 60000 .
+
+# ADDITIONAL AREAS FOR DLC CONTENT
+
+ds:UndeadAsylum a ds:Area ;
+    schema:name "Northern Undead Asylum" ;
+    schema:description "Starting area and tutorial dungeon" ;
+    ds:connectsTo ds:FirelinkShrine .
+
+ds:PaintedWorld a ds:Area ;
+    schema:name "Painted World of Ariamis" ;
+    schema:description "Hidden world inside a painting" ;
+    ds:connectsTo ds:AnorLondo .
+
+ds:RoyalWood a ds:Area ;
+    schema:name "Royal Wood" ;
+    schema:description "Ancient forest in Oolacile" .
+
+ds:Chasm a ds:Area ;
+    schema:name "Chasm of the Abyss" ;
+    schema:description "Deepest part of the Abyss where Manus resides" ;
+    ds:connectsTo ds:RoyalWood .
+ds:StrayDemon a ds:Boss ;
+    schema:name "Stray Demon" ;
+    schema:description "Stronger version of Asylum Demon found in Northern Undead Asylum" ;
+    ds:locatedIn ds:UndeadAsylum ;
+    ds:healthPoints 4499 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:FireDamage, ds:LightningDamage ;
+    ds:resistantTo ds:PhysicalDamage ;
+    ds:drops ds:StrayDemonSoul .
+
+ds:MoonlightButterfly a ds:Boss ;
+    schema:name "Moonlight Butterfly" ;
+    schema:description "Magical butterfly created by Seath's experiments" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 1192 ;
+    ds:souls 10000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:MoonlightButterflySoul .
+
+ds:GreyWolfSif a ds:Boss ;
+    schema:name "Great Grey Wolf Sif" ;
+    schema:description "Loyal wolf companion of Artorias" ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 3432 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:SifSoul .
+
+ds:DemonFiresage a ds:Boss ;
+    schema:name "Demon Firesage" ;
+    schema:description "Fire-wielding demon in the Demon Ruins" ;
+    ds:locatedIn ds:DemonRuins ;
+    ds:healthPoints 3599 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:DemonFiresageSoul .
+
+ds:CentipedeDemon a ds:Boss ;
+    schema:name "Ceaseless Discharge" ;
+    schema:description "Tortured demon perpetually burning with lava" ;
+    ds:locatedIn ds:DemonRuins ;
+    ds:healthPoints 3188 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:CeaselessDischargeSoul .
+
+ds:CentipedeDemonActual a ds:Boss ;
+    schema:name "Centipede Demon" ;
+    schema:description "Multi-limbed demon in the lava lake" ;
+    ds:locatedIn ds:LostIzalith ;
+    ds:healthPoints 4536 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:CentipedeDemonSoul .
+
+ds:PriscillaCrossbreed a ds:Boss ;
+    schema:name "Crossbreed Priscilla" ;
+    schema:description "Half-dragon outcast hidden in the Painted World" ;
+    ds:locatedIn ds:PaintedWorld ;
+    ds:healthPoints 1880 ;
+    ds:souls 30000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:PriscillaSoul .
+
+ds:DarkSunGwyndolinBoss a ds:Boss ;
+    schema:name "Dark Sun Gwyndolin" ;
+    schema:description "Optional boss, Dark Sun and master of illusions" ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:healthPoints 2091 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:GwyndolinSoul .
+
+# DLC BOSSES (Artorias of the Abyss)
+
+ds:SanctuaryGuardian a ds:Boss ;
+    schema:name "Sanctuary Guardian" ;
+    schema:description "Chimeric guardian of the Royal Wood" ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 2955 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:SanctuaryGuardianSoul .
+
+ds:ArtoriasTheAbysswalker a ds:Boss ;
+    schema:name "Knight Artorias" ;
+    schema:description "Legendary knight corrupted by the Abyss" ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 3750 ;
+    ds:souls 50000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:ArtoriasSoul .
+
+ds:BlackDragonKalameet a ds:Boss ;
+    schema:name "Black Dragon Kalameet" ;
+    schema:description "Ancient black dragon with one eye" ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 5665 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage, ds:MagicDamage ;
+    ds:drops ds:KalameetSoul .
+
+ds:Manus a ds:Boss ;
+    schema:name "Manus, Father of the Abyss" ;
+    schema:description "Primeval human whose soul became maddened" ;
+    ds:locatedIn ds:Chasm ;
+    ds:healthPoints 6665 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:ManusSoul .
+
+# ADDITIONAL BOSS SOULS
+# Note: Boss Souls are both BossSoul AND Item (can be consumed or used for crafting)
+
+ds:StrayDemonSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of a Stray Demon" ;
+    schema:description "Soul of the Stray Demon. Can be consumed for souls or used to create unique items" ;
+    ds:soulCost 20000 .
+
+ds:MoonlightButterflySoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Moonlight Butterfly" ;
+    schema:description "Soul of Seath's magical creation. Can be consumed or used to create the Crystal Ring Shield" ;
+    ds:soulCost 10000 .
+
+ds:DemonFiresageSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Demon Firesage" ;
+    schema:description "Soul of the fire-wielding demon. Can be consumed or used to create the Firesage Catalyst" ;
+    ds:soulCost 20000 .
+
+ds:CeaselessDischargeSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Ceaseless Discharge" ;
+    schema:description "Soul of the perpetually burning demon. Can be consumed or used to create unique items" ;
+    ds:soulCost 20000 .
+
+ds:CentipedeDemonSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Centipede Demon" ;
+    schema:description "Soul of the multi-limbed demon. Can be consumed or used to create the Orange Charred Ring" ;
+    ds:soulCost 40000 .
+
+ds:PriscillaSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Priscilla" ;
+    schema:description "Soul of the Crossbreed. Can be consumed or used to create the Lifehunt Scythe" ;
+    ds:soulCost 30000 .
+
+ds:GwyndolinSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Gwyndolin" ;
+    schema:description "Soul of the Dark Sun. Can be consumed or used to create the Darkmoon Bow or Tin Darkmoon Catalyst" ;
+    ds:soulCost 40000 .
+
+ds:SanctuaryGuardianSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of the Sanctuary Guardian" ;
+    schema:description "Soul of the chimeric guardian. Can be consumed or used to create the Sanctuary Guardian weapons" ;
+    ds:soulCost 20000 .
+
+ds:ArtoriasSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Artorias" ;
+    schema:description "Soul of the legendary Abysswalker. Can be consumed or used to create weapons or the Abyss Greatsword" ;
+    ds:soulCost 50000 .
+
+ds:KalameetSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Kalameet" ;
+    schema:description "Soul of the ancient black dragon. Can be consumed or used to create unique weapons" ;
+    ds:soulCost 60000 .
+
+ds:ManusSoul a ds:BossSoul, ds:Item ;
+    schema:name "Soul of Manus" ;
+    schema:description "Soul of the Father of the Abyss. Can be consumed or used to create powerful dark sorceries" ;
+    ds:soulCost 60000 .
+
+# ADDITIONAL AREAS FOR DLC CONTENT
+
+ds:UndeadAsylum a ds:Area ;
+    schema:name "Northern Undead Asylum" ;
+    schema:description "Starting area and tutorial dungeon" ;
+    ds:connectsTo ds:FirelinkShrine .
+
+ds:PaintedWorld a ds:Area ;
+    schema:name "Painted World of Ariamis" ;
+    schema:description "Hidden world inside a painting" ;
+    ds:connectsTo ds:AnorLondo .
+
+ds:RoyalWood a ds:Area ;
+    schema:name "Royal Wood" ;
+    schema:description "Ancient forest in Oolacile" .
+
+ds:Chasm a ds:Area ;
+    schema:name "Chasm of the Abyss" ;
+    schema:description "Deepest part of the Abyss where Manus resides" ;
+    ds:connectsTo ds:RoyalWood .
+
+
+# ============================================
+# END OF ONTOLOGY WITH INDIVIDUALS
+# ============================================
+# ============================================
+# EXTERNAL DATASET LINKS (DBpedia / Wikidata)
+# ============================================
+
+# Characters
+ds:GwynLordOfCinder owl:sameAs <http://dbpedia.org/resource/Gwyn> ,
+                              <http://www.wikidata.org/entity/Q5624446> .
+
+ds:ArtoriasTheAbysswalker owl:sameAs <http://www.wikidata.org/entity/Q108762372> .
+
+ds:Solaire owl:sameAs <http://www.wikidata.org/entity/Q3553962> .
+
+ds:SeathTheScaleless owl:sameAs <http://www.wikidata.org/entity/Q108762345> .
+
+# Locations
+ds:AnorLondo owl:sameAs <http://www.wikidata.org/entity/Q111819156> .
+
+ds:FirelinkShrine owl:sameAs <http://www.wikidata.org/entity/Q111819155> .
+
+# Bosses
+ds:SifTheGreatWolf owl:sameAs <http://www.wikidata.org/entity/Q108762373> .
+
+# Items
+ds:EstusFlask owl:sameAs <http://www.wikidata.org/entity/Q111819154> .
+
+ds:TitaniteShard owl:sameAs <http://www.wikidata.org/entity/Q111819153> .
