@@ -1,0 +1,126 @@
+@prefix ds: <http://darksouls.ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix schema: <https://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ds:Area a owl:Class .
+
+ds:Armor a owl:Class .
+
+ds:ArmorSlot a owl:Class .
+
+ds:AsylumDemon a ds:Boss ;
+    ds:drops ds:AsylumDemonSoul ;
+    ds:healthPoints 1176 ;
+    ds:locatedIn ds:UndeadAsylum,
+        ds:UndeadBurg ;
+    ds:resistantTo ds:PhysicalDamage ;
+    ds:souls 2000 ;
+    ds:weakTo ds:FireDamage ;
+    schema:description "Giant demon guarding the Undead Asylum" ;
+    schema:name "Asylum Demon" .
+
+ds:BasementKey ds:droppedBy ds:TaurusDemon .
+
+ds:BellGargoyles a ds:Boss ;
+    ds:drops ds:GargoyleSoul ;
+    ds:healthPoints 1520 ;
+    ds:locatedIn ds:UndeadParish ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:souls 10000 ;
+    ds:weakTo ds:LightningDamage ;
+    schema:description "Twin stone guardians of the first bell" ;
+    schema:name "Bell Gargoyles" .
+
+ds:BossSoul a owl:Class .
+
+ds:CapraDemon a ds:Boss ;
+    ds:drops ds:CapraDemonSoul ;
+    ds:healthPoints 1234 ;
+    ds:locatedIn ds:LowerUndeadBurg,
+        ds:UndeadBurg ;
+    ds:souls 6000 ;
+    ds:weakTo ds:FireDamage ;
+    schema:description "A goat demon with two attack dogs" ;
+    schema:name "Capra Demon" .
+
+ds:Consumable a owl:Class .
+
+ds:Covenant a owl:Class .
+
+ds:DamageType a owl:Class .
+
+ds:DemonTitanite ds:droppedBy ds:TaurusDemon .
+
+ds:Enemy a owl:Class .
+
+ds:Equipment a owl:Class .
+
+ds:GapingDragon a ds:Boss ;
+    ds:drops ds:GapingDragonSoul ;
+    ds:healthPoints 3200 ;
+    ds:locatedIn ds:DepthsArea ;
+    ds:souls 25000 ;
+    ds:weakTo ds:LightningDamage ;
+    schema:description "Grotesque dragon in the Depths" ;
+    schema:name "Gaping Dragon" .
+
+ds:HostileNPC a owl:Class .
+
+ds:Item a owl:Class .
+
+ds:KeyItem a owl:Class .
+
+ds:Melee a owl:Class .
+
+ds:Miracle a owl:Class .
+
+ds:NPC a owl:Class .
+
+ds:Pyromancy a owl:Class .
+
+ds:QuestGiver a owl:Class .
+
+ds:Ranged a owl:Class .
+
+ds:Ring a owl:Class .
+
+ds:Shield a owl:Class .
+
+ds:Sorcery a owl:Class .
+
+ds:Spell a owl:Class .
+
+ds:Summon a owl:Class .
+
+ds:UpgradeMaterial a owl:Class .
+
+ds:UpgradePath a owl:Class .
+
+ds:Vendor a owl:Class .
+
+ds:Weapon a owl:Class .
+
+ds:TaurusDemon a ds:Boss ;
+    ds:drops ds:TaurusDemonSoul ;
+    ds:healthPoints 1215 ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:souls 3000 ;
+    ds:weakTo ds:LightningDamage ;
+    schema:description "A massive horned demon blocking the bridge" ;
+    schema:name "Taurus Demon" .
+
+ds:Boss a owl:Class .
+
+[] a owl:Class .
+
+[] a owl:Class .
+
+[] a owl:Class .
+
+[] a owl:Class .
+
+[] a owl:Class .
+
+[] a owl:Class .
+
