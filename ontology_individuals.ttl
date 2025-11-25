@@ -3,278 +3,410 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix schema: <https://schema.org/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cc: <http://creativecommons.org/ns#> .
 @prefix ds: <http://darksouls.ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
 
 # Ontology Declaration
 ds: a owl:Ontology ;
-    rdfs:label "Dark Souls Game Ontology" ;
-    rdfs:comment "An ontology modeling the mechanics, items, characters, and world of Dark Souls" ;
-    owl:versionInfo "1.0" .
+    rdfs:label "Dark Souls Game Ontology"@en ;
+    rdfs:comment "An ontology modeling the mechanics, items, characters, and world of Dark Souls"@en ;
+    owl:versionInfo "3.0" ;
+    dcterms:title "Dark Souls Linked Open Data Ontology"@en ;
+    dcterms:description "A comprehensive ontology for the Dark Souls video game universe, linked to external knowledge bases"@en ;
+    dcterms:creator "Immad Shah and Sameer Asif - FAST NUCES Islamabad"@en ;
+    dcterms:created "2025-11-25"^^xsd:date ;
+    dcterms:modified "2025-11-25"^^xsd:date ;
+    dcterms:license <http://creativecommons.org/licenses/by/4.0/> ;
+    cc:license <http://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:rights "This work is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0)"@en ;
+    dcterms:subject "video games"@en, "ontology"@en, "Dark Souls"@en ;
+    foaf:homepage <http://darksouls.ontology/> ;
+    # Link to related ontologies
+    rdfs:seeAlso <http://dbpedia.org/ontology/VideoGame> ,
+                 <http://schema.org/VideoGame> ,
+                 wd:Q1166232 ; # Wikidata: Dark Souls
+    # Void Dataset Description
+    dcterms:isPartOf <http://darksouls.ontology/dataset> .
 
 # ============================================
-# CLASSES (Same as original)
+# EXTERNAL ONTOLOGY ALIGNMENT
+# ============================================
+
+ds:Item owl:equivalentClass schema:Product ;
+        skos:closeMatch dbo:Item .
+
+ds:Weapon owl:equivalentClass dbo:Weapon ;
+          skos:broadMatch schema:Product .
+
+ds:Boss owl:equivalentClass dbo:FictionalCharacter ;
+        skos:closeMatch schema:GamePlayMode .
+
+ds:NPC owl:equivalentClass dbo:FictionalCharacter ;
+       skos:closeMatch schema:Person .
+
+ds:Area owl:equivalentClass dbo:Location ;
+        skos:closeMatch schema:Place .
+
+ds:Spell skos:closeMatch dbo:Ability .
+    
+# ============================================
+# CLASSES
 # ============================================
 
 ds:Item a owl:Class ;
-    rdfs:label "Item" ;
-    rdfs:comment "Any obtainable object in the game world" .
+    rdfs:label "Item"@en ;
+    rdfs:comment "Any obtainable object in the game world"@en ;
+    owl:equivalentClass schema:Product ;
+    skos:closeMatch dbo:Item .
 
 ds:Equipment a owl:Class ;
     rdfs:subClassOf ds:Item ;
-    rdfs:label "Equipment" ;
-    rdfs:comment "Wearable or usable gear" .
+    rdfs:label "Equipment"@en ;
+    rdfs:comment "Wearable or usable gear"@en .
 
 ds:Weapon a owl:Class ;
     rdfs:subClassOf ds:Equipment ;
-    rdfs:label "Weapon" ;
-    rdfs:comment "Offensive equipment" .
+    rdfs:label "Weapon"@en ;
+    rdfs:comment "Offensive equipment"@en ;
+    owl:equivalentClass dbo:Weapon .
 
 ds:Melee a owl:Class ;
     rdfs:subClassOf ds:Weapon ;
-    rdfs:label "Melee Weapon" ;
-    rdfs:comment "Close-range weapons" .
+    rdfs:label "Melee Weapon"@en ;
+    rdfs:comment "Close-range weapons"@en ;
+    skos:related wd:Q217269 . # Wikidata: Melee weapon
 
 ds:Ranged a owl:Class ;
     rdfs:subClassOf ds:Weapon ;
-    rdfs:label "Ranged Weapon" ;
-    rdfs:comment "Distance weapons" .
+    rdfs:label "Ranged Weapon"@en ;
+    rdfs:comment "Distance weapons"@en ;
+    skos:related wd:Q12800 . # Wikidata: Ranged weapon
 
 ds:Armor a owl:Class ;
     rdfs:subClassOf ds:Equipment ;
-    rdfs:label "Armor" ;
-    rdfs:comment "Defensive equipment" .
+    rdfs:label "Armor"@en ;
+    rdfs:comment "Defensive equipment"@en ;
+    skos:exactMatch wd:Q12791 . # Wikidata: Armour
 
 ds:Shield a owl:Class ;
     rdfs:subClassOf ds:Equipment ;
-    rdfs:label "Shield" ;
-    rdfs:comment "Blocking equipment" .
+    rdfs:label "Shield"@en ;
+    rdfs:comment "Blocking equipment"@en ;
+    skos:exactMatch wd:Q44847 . # Wikidata: Shield
 
 ds:Ring a owl:Class ;
     rdfs:subClassOf ds:Equipment ;
-    rdfs:label "Ring" ;
-    rdfs:comment "Accessory equipment" .
+    rdfs:label "Ring"@en ;
+    rdfs:comment "Accessory equipment"@en ;
+    skos:related wd:Q46847 . # Wikidata: Ring (jewellery)
 
 ds:Consumable a owl:Class ;
     rdfs:subClassOf ds:Item ;
-    rdfs:label "Consumable" ;
-    rdfs:comment "Single-use or limited-use items" .
+    rdfs:label "Consumable"@en ;
+    rdfs:comment "Single-use or limited-use items"@en .
 
 ds:UpgradeMaterial a owl:Class ;
     rdfs:subClassOf ds:Item ;
-    rdfs:label "Upgrade Material" ;
-    rdfs:comment "Items used to enhance equipment" .
+    rdfs:label "Upgrade Material"@en ;
+    rdfs:comment "Items used to enhance equipment"@en .
 
 ds:KeyItem a owl:Class ;
     rdfs:subClassOf ds:Item ;
-    rdfs:label "Key Item" ;
-    rdfs:comment "Quest and progression items" .
+    rdfs:label "Key Item"@en ;
+    rdfs:comment "Quest and progression items"@en .
 
 ds:BossSoul a owl:Class ;
     rdfs:subClassOf ds:Item ;
-    rdfs:label "Boss Soul" ;
-    rdfs:comment "Special items dropped by bosses" .
+    rdfs:label "Boss Soul"@en ;
+    rdfs:comment "Special items dropped by bosses"@en .
 
 ds:Boss a owl:Class ;
-    rdfs:label "Boss" ;
-    rdfs:comment "Major enemies with unique souls and mechanics" .
+    rdfs:label "Boss"@en ;
+    rdfs:comment "Major enemies with unique souls and mechanics"@en ;
+    owl:equivalentClass dbo:FictionalCharacter ;
+    skos:related wd:Q4948562 . # Wikidata: Boss (video gaming)
 
 ds:NPC a owl:Class ;
-    rdfs:label "NPC" ;
-    rdfs:comment "Non-player characters" .
+    rdfs:label "NPC"@en ;
+    rdfs:comment "Non-player characters"@en ;
+    owl:equivalentClass dbo:FictionalCharacter ;
+    skos:exactMatch wd:Q849706 . # Wikidata: Non-player character
 
 ds:Vendor a owl:Class ;
     rdfs:subClassOf ds:NPC ;
-    rdfs:label "Vendor" ;
-    rdfs:comment "NPCs who sell items" .
+    rdfs:label "Vendor"@en ;
+    rdfs:comment "NPCs who sell items"@en .
 
 ds:QuestGiver a owl:Class ;
     rdfs:subClassOf ds:NPC ;
-    rdfs:label "Quest Giver" ;
-    rdfs:comment "NPCs who provide quests" .
+    rdfs:label "Quest Giver"@en ;
+    rdfs:comment "NPCs who provide quests"@en .
 
 ds:Summon a owl:Class ;
     rdfs:subClassOf ds:NPC ;
-    rdfs:label "Summon" ;
-    rdfs:comment "NPCs who can be summoned for assistance" .
+    rdfs:label "Summon"@en ;
+    rdfs:comment "NPCs who can be summoned for assistance"@en .
 
 ds:HostileNPC a owl:Class ;
     rdfs:subClassOf ds:NPC ;
-    rdfs:label "Hostile NPC" ;
-    rdfs:comment "NPCs who attack the player" .
+    rdfs:label "Hostile NPC"@en ;
+    rdfs:comment "NPCs who attack the player"@en .
 
 ds:Enemy a owl:Class ;
-    rdfs:label "Enemy" ;
-    rdfs:comment "Regular hostile creatures" .
+    rdfs:label "Enemy"@en ;
+    rdfs:comment "Regular hostile creatures"@en ;
+    skos:related wd:Q1187850 . # Wikidata: Enemy
 
 ds:Area a owl:Class ;
-    rdfs:label "Area" ;
-    rdfs:comment "Geographic locations in the game world" .
+    rdfs:label "Area"@en ;
+    rdfs:comment "Geographic locations in the game world"@en ;
+    owl:equivalentClass dbo:Location ;
+    skos:closeMatch schema:Place .
 
 ds:Covenant a owl:Class ;
-    rdfs:label "Covenant" ;
-    rdfs:comment "Factions players can join" .
+    rdfs:label "Covenant"@en ;
+    rdfs:comment "Factions players can join"@en ;
+    skos:related wd:Q327245 . # Wikidata: Faction (fiction)
 
 ds:Spell a owl:Class ;
-    rdfs:label "Spell" ;
-    rdfs:comment "Magic abilities" .
+    rdfs:label "Spell"@en ;
+    rdfs:comment "Magic abilities"@en ;
+    skos:related wd:Q188425 . # Wikidata: Magic in fiction
 
 ds:Sorcery a owl:Class ;
     rdfs:subClassOf ds:Spell ;
-    rdfs:label "Sorcery" ;
-    rdfs:comment "Intelligence-based magic" .
+    rdfs:label "Sorcery"@en ;
+    rdfs:comment "Intelligence-based magic"@en ;
+    skos:related wd:Q201676 . # Wikidata: Magic (supernatural)
 
 ds:Miracle a owl:Class ;
     rdfs:subClassOf ds:Spell ;
-    rdfs:label "Miracle" ;
-    rdfs:comment "Faith-based magic" .
+    rdfs:label "Miracle"@en ;
+    rdfs:comment "Faith-based magic"@en ;
+    skos:related wd:Q170398 . # Wikidata: Miracle
 
 ds:Pyromancy a owl:Class ;
     rdfs:subClassOf ds:Spell ;
-    rdfs:label "Pyromancy" ;
-    rdfs:comment "Fire-based magic" .
+    rdfs:label "Pyromancy"@en ;
+    rdfs:comment "Fire-based magic"@en ;
+    skos:related wd:Q3507322 . # Wikidata: Pyrokinesis
 
 ds:UpgradePath a owl:Class ;
-    rdfs:label "Upgrade Path" ;
-    rdfs:comment "Weapon enhancement routes" .
+    rdfs:label "Upgrade Path"@en ;
+    rdfs:comment "Weapon enhancement routes"@en .
 
 ds:DamageType a owl:Class ;
-    rdfs:label "Damage Type" ;
-    rdfs:comment "Categories of damage" .
+    rdfs:label "Damage Type"@en ;
+    rdfs:comment "Categories of damage"@en .
 
 ds:ArmorSlot a owl:Class ;
-    rdfs:label "Armor Slot" ;
-    rdfs:comment "Body parts where armor can be equipped" .
+    rdfs:label "Armor Slot"@en ;
+    rdfs:comment "Body parts where armor can be equipped"@en .
 
 # ============================================
-# PROPERTIES (Same as original - abbreviated here)
+# PROPERTIES
 # ============================================
 
 ds:droppedBy a owl:ObjectProperty ;
+    rdfs:label "dropped by"@en ;
+    rdfs:comment "Indicates which character drops this item"@en ;
     rdfs:domain ds:Item ;
-    rdfs:range [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy ds:NPC) ] .
+    rdfs:range [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy ds:NPC) ] ;
+    owl:inverseOf ds:drops .
 
 ds:soldBy a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "sold by"@en ;
+    rdfs:comment "Indicates which vendor sells this item"@en ;
     rdfs:domain ds:Item ;
     rdfs:range ds:NPC .
 
 ds:foundIn a owl:ObjectProperty ;
+    rdfs:label "found in"@en ;
+    rdfs:comment "Indicates where this item can be found"@en ;
     rdfs:domain ds:Item ;
     rdfs:range ds:Area .
 
 ds:upgradesTo a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:label "upgrades to"@en ;
+    rdfs:comment "Indicates upgrade progression"@en ;
     rdfs:domain ds:Weapon ;
     rdfs:range ds:Weapon .
 
 ds:requiresItem a owl:ObjectProperty ;
+    rdfs:label "requires item"@en ;
+    rdfs:comment "Materials needed for this upgrade path"@en ;
     rdfs:domain ds:UpgradePath ;
     rdfs:range ds:UpgradeMaterial .
 
 ds:locatedIn a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "located in"@en ;
+    rdfs:comment "Indicates where this entity is located"@en ;
     rdfs:domain [ a owl:Class ; owl:unionOf (ds:NPC ds:Boss ds:Enemy) ] ;
     rdfs:range ds:Area .
 
 ds:connectsTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:label "connects to"@en ;
+    rdfs:comment "Indicates area connections"@en ;
     rdfs:domain ds:Area ;
     rdfs:range ds:Area .
 
 ds:memberOfCovenant a owl:ObjectProperty ;
+    rdfs:label "member of covenant"@en ;
+    rdfs:comment "Indicates covenant membership"@en ;
     rdfs:domain ds:NPC ;
     rdfs:range ds:Covenant .
 
 ds:weakTo a owl:ObjectProperty ;
+    rdfs:label "weak to"@en ;
+    rdfs:comment "Indicates damage vulnerabilities"@en ;
     rdfs:domain ds:Boss ;
     rdfs:range ds:DamageType .
 
 ds:resistantTo a owl:ObjectProperty ;
+    rdfs:label "resistant to"@en ;
+    rdfs:comment "Indicates damage resistances"@en ;
     rdfs:domain ds:Boss ;
     rdfs:range ds:DamageType .
 
 ds:taughtBy a owl:ObjectProperty ;
+    rdfs:label "taught by"@en ;
+    rdfs:comment "Indicates who teaches this spell"@en ;
     rdfs:domain ds:Spell ;
     rdfs:range ds:NPC .
 
 ds:performsUpgrade a owl:ObjectProperty ;
+    rdfs:label "performs upgrade"@en ;
+    rdfs:comment "Indicates which NPC can perform this upgrade"@en ;
     rdfs:domain ds:NPC ;
     rdfs:range ds:UpgradePath .
 
 ds:drops a owl:ObjectProperty, owl:InverseFunctionalProperty ;
+    rdfs:label "drops"@en ;
+    rdfs:comment "Indicates what this boss drops"@en ;
     rdfs:domain ds:Boss ;
-    rdfs:range ds:BossSoul .
+    rdfs:range ds:BossSoul ;
+    owl:inverseOf ds:droppedBy .
 
 # Data Properties
 ds:soulCost a owl:DatatypeProperty ;
+    rdfs:label "soul cost"@en ;
+    rdfs:comment "Cost in souls"@en ;
     rdfs:domain ds:Item ;
     rdfs:range xsd:integer .
 
 ds:weight a owl:DatatypeProperty ;
+    rdfs:label "weight"@en ;
+    rdfs:comment "Equipment weight"@en ;
     rdfs:domain ds:Equipment ;
     rdfs:range xsd:decimal .
 
 ds:durability a owl:DatatypeProperty ;
+    rdfs:label "durability"@en ;
+    rdfs:comment "Equipment durability"@en ;
     rdfs:domain ds:Equipment ;
     rdfs:range xsd:integer .
 
 ds:strengthRequirement a owl:DatatypeProperty ;
+    rdfs:label "strength requirement"@en ;
+    rdfs:comment "Required strength stat"@en ;
     rdfs:domain ds:Weapon ;
     rdfs:range xsd:integer .
 
 ds:dexterityRequirement a owl:DatatypeProperty ;
+    rdfs:label "dexterity requirement"@en ;
+    rdfs:comment "Required dexterity stat"@en ;
     rdfs:domain ds:Weapon ;
     rdfs:range xsd:integer .
 
 ds:intelligenceRequirement a owl:DatatypeProperty ;
+    rdfs:label "intelligence requirement"@en ;
+    rdfs:comment "Required intelligence stat"@en ;
     rdfs:domain [ a owl:Class ; owl:unionOf (ds:Weapon ds:Spell) ] ;
     rdfs:range xsd:integer .
 
 ds:faithRequirement a owl:DatatypeProperty ;
+    rdfs:label "faith requirement"@en ;
+    rdfs:comment "Required faith stat"@en ;
     rdfs:domain [ a owl:Class ; owl:unionOf (ds:Weapon ds:Spell) ] ;
     rdfs:range xsd:integer .
 
 ds:physicalDamage a owl:DatatypeProperty ;
+    rdfs:label "physical damage"@en ;
+    rdfs:comment "Physical damage value"@en ;
     rdfs:domain ds:Weapon ;
     rdfs:range xsd:integer .
 
 ds:magicDamage a owl:DatatypeProperty ;
+    rdfs:label "magic damage"@en ;
+    rdfs:comment "Magic damage value"@en ;
     rdfs:domain ds:Weapon ;
     rdfs:range xsd:integer .
 
 ds:fireDamage a owl:DatatypeProperty ;
+    rdfs:label "fire damage"@en ;
+    rdfs:comment "Fire damage value"@en ;
     rdfs:domain ds:Weapon ;
     rdfs:range xsd:integer .
 
 ds:physicalDefense a owl:DatatypeProperty ;
+    rdfs:label "physical defense"@en ;
+    rdfs:comment "Physical defense value"@en ;
     rdfs:domain ds:Armor ;
     rdfs:range xsd:integer .
 
 ds:magicDefense a owl:DatatypeProperty ;
+    rdfs:label "magic defense"@en ;
+    rdfs:comment "Magic defense value"@en ;
     rdfs:domain ds:Armor ;
     rdfs:range xsd:integer .
 
 ds:poise a owl:DatatypeProperty ;
+    rdfs:label "poise"@en ;
+    rdfs:comment "Poise value"@en ;
     rdfs:domain ds:Armor ;
     rdfs:range xsd:decimal .
 
 ds:stability a owl:DatatypeProperty ;
+    rdfs:label "stability"@en ;
+    rdfs:comment "Shield stability value"@en ;
     rdfs:domain ds:Shield ;
     rdfs:range xsd:integer .
 
 ds:physicalReduction a owl:DatatypeProperty ;
+    rdfs:label "physical reduction"@en ;
+    rdfs:comment "Physical damage reduction percentage"@en ;
     rdfs:domain ds:Shield ;
     rdfs:range xsd:decimal .
 
 ds:healthPoints a owl:DatatypeProperty ;
+    rdfs:label "health points"@en ;
+    rdfs:comment "Total HP"@en ;
     rdfs:domain [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy) ] ;
     rdfs:range xsd:integer .
 
 ds:souls a owl:DatatypeProperty ;
+    rdfs:label "souls"@en ;
+    rdfs:comment "Souls rewarded"@en ;
     rdfs:domain [ a owl:Class ; owl:unionOf (ds:Boss ds:Enemy) ] ;
     rdfs:range xsd:integer .
 
 ds:uses a owl:DatatypeProperty ;
+    rdfs:label "uses"@en ;
+    rdfs:comment "Number of spell uses"@en ;
     rdfs:domain ds:Spell ;
     rdfs:range xsd:integer .
 
 ds:slots a owl:DatatypeProperty ;
+    rdfs:label "slots"@en ;
+    rdfs:comment "Attunement slots required"@en ;
     rdfs:domain ds:Spell ;
     rdfs:range xsd:integer .
 
@@ -282,37 +414,46 @@ ds:slots a owl:DatatypeProperty ;
 # ENUMERATION INDIVIDUALS
 # ============================================
 
-# Damage Types
 ds:PhysicalDamage a ds:DamageType ;
-    rdfs:label "Physical Damage" .
+    rdfs:label "Physical Damage"@en ;
+    skos:related wd:Q11423 . # Wikidata: Force
 
 ds:MagicDamage a ds:DamageType ;
-    rdfs:label "Magic Damage" .
+    rdfs:label "Magic Damage"@en ;
+    skos:related wd:Q201676 . # Wikidata: Magic (supernatural)
 
 ds:FireDamage a ds:DamageType ;
-    rdfs:label "Fire Damage" .
+    rdfs:label "Fire Damage"@en ;
+    skos:related wd:Q3196 . # Wikidata: Fire
 
 ds:LightningDamage a ds:DamageType ;
-    rdfs:label "Lightning Damage" .
+    rdfs:label "Lightning Damage"@en ;
+    skos:related wd:Q127834 . # Wikidata: Lightning
 
 ds:DivineDamage a ds:DamageType ;
-    rdfs:label "Divine Damage" .
+    rdfs:label "Divine Damage"@en ;
+    skos:related wd:Q112193 . # Wikidata: Divinity
 
 ds:OccultDamage a ds:DamageType ;
-    rdfs:label "Occult Damage" .
+    rdfs:label "Occult Damage"@en ;
+    skos:related wd:Q171782 . # Wikidata: Occult
 
 # Armor Slots
 ds:Head a ds:ArmorSlot ;
-    rdfs:label "Head Slot" .
+    rdfs:label "Head Slot"@en ;
+    skos:exactMatch wd:Q23640 . # Wikidata: Head
 
 ds:Chest a ds:ArmorSlot ;
-    rdfs:label "Chest Slot" .
+    rdfs:label "Chest Slot"@en ;
+    skos:exactMatch wd:Q133279 . # Wikidata: Thorax
 
 ds:Hands a ds:ArmorSlot ;
-    rdfs:label "Hands Slot" .
+    rdfs:label "Hands Slot"@en ;
+    skos:exactMatch wd:Q33767 . # Wikidata: Hand
 
 ds:Legs a ds:ArmorSlot ;
-    rdfs:label "Legs Slot" .
+    rdfs:label "Legs Slot"@en ;
+    skos:exactMatch wd:Q133105 . # Wikidata: Leg
 
 # ============================================
 # AREA INDIVIDUALS
@@ -1134,7 +1275,7 @@ ds:AvelynCrossbow a ds:Ranged ;
     ds:foundIn ds:TheDukesArchives .
 
 # ============================================
-# ARMOR INDIVIDUALS (20 total)
+# ARMOR INDIVIDUALS
 # ============================================
 
 ds:EliteKnightHelm a ds:Armor ;
@@ -1344,7 +1485,7 @@ ds:CrystalArmor a ds:Armor ;
     ds:foundIn ds:TheDukesArchives .
 
 # ============================================
-# SHIELD INDIVIDUALS (20 total)
+# SHIELD INDIVIDUALS
 # ============================================
 
 ds:HeaterShield a ds:Shield ;
@@ -1553,7 +1694,7 @@ ds:GreatshieldArtorias a ds:Shield ;
     ds:droppedBy ds:SifTheGreatWolf .
 
 # ============================================
-# RING INDIVIDUALS (20 total)
+# RING INDIVIDUALS
 # ============================================
 
 ds:HavelRing a ds:Ring ;
@@ -2122,6 +2263,8 @@ ds:ChaosUpgradePath a ds:UpgradePath ;
 ds:KilnOfTheFirstFlame a ds:Area ;
     schema:name "Kiln of the First Flame" ;
     schema:description "Final area where Gwyn awaits" .
+
+
 ds:StrayDemon a ds:Boss ;
     schema:name "Stray Demon" ;
     schema:description "Stronger version of Asylum Demon found in Northern Undead Asylum" ;
@@ -2517,10 +2660,6 @@ ds:Chasm a ds:Area ;
     schema:description "Deepest part of the Abyss where Manus resides" ;
     ds:connectsTo ds:RoyalWood .
 
-
-# ============================================
-# END OF ONTOLOGY WITH INDIVIDUALS
-# ============================================
 # ============================================
 # EXTERNAL DATASET LINKS (DBpedia / Wikidata)
 # ============================================
@@ -2547,3 +2686,310 @@ ds:SifTheGreatWolf owl:sameAs <http://www.wikidata.org/entity/Q108762373> .
 ds:EstusFlask owl:sameAs <http://www.wikidata.org/entity/Q111819154> .
 
 ds:TitaniteShard owl:sameAs <http://www.wikidata.org/entity/Q111819153> .
+
+# ============================================
+# KEY BOSS INDIVIDUALS
+# ============================================
+
+# MAIN GAME BOSSES - ENHANCED
+
+ds:StrayDemon a ds:Boss ;
+    schema:name "Stray Demon"@en ;
+    schema:description "Stronger version of Asylum Demon found in Northern Undead Asylum"@en ;
+    ds:locatedIn ds:UndeadAsylum ;
+    ds:healthPoints 4499 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:FireDamage, ds:LightningDamage ;
+    ds:resistantTo ds:PhysicalDamage ;
+    ds:drops ds:StrayDemonSoul ;
+    # External links
+    skos:related dbr:Demon ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:MoonlightButterfly a ds:Boss ;
+    schema:name "Moonlight Butterfly"@en ;
+    schema:description "Magical butterfly created by Seath's experiments"@en ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 1192 ;
+    ds:souls 10000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:MoonlightButterflySoul ;
+    # External links
+    skos:related dbr:Butterfly ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:GreyWolfSif a ds:Boss ;
+    schema:name "Great Grey Wolf Sif"@en ;
+    schema:description "Loyal wolf companion of Artorias"@en ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 3432 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:SifSoul ;
+    # External links
+    owl:sameAs wd:Q50296411 ;
+    skos:related dbr:Wolf ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:DemonFiresage a ds:Boss ;
+    schema:name "Demon Firesage"@en ;
+    schema:description "Fire-wielding demon in the Demon Ruins"@en ;
+    ds:locatedIn ds:DemonRuins ;
+    ds:healthPoints 3599 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:DemonFiresageSoul ;
+    # External links
+    skos:related dbr:Demon ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:CentipedeDemon a ds:Boss ;
+    schema:name "Ceaseless Discharge"@en ;
+    schema:description "Tortured demon perpetually burning with lava"@en ;
+    ds:locatedIn ds:DemonRuins ;
+    ds:healthPoints 3188 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:CeaselessDischargeSoul ;
+    # External links
+    skos:related dbr:Demon, dbr:Lava ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:CentipedeDemonActual a ds:Boss ;
+    schema:name "Centipede Demon"@en ;
+    schema:description "Multi-limbed demon in the lava lake"@en ;
+    ds:locatedIn ds:LostIzalith ;
+    ds:healthPoints 4536 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage ;
+    ds:drops ds:CentipedeDemonSoul ;
+    # External links
+    skos:related dbr:Centipede, dbr:Demon ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:PriscillaCrossbreed a ds:Boss ;
+    schema:name "Crossbreed Priscilla"@en ;
+    schema:description "Half-dragon outcast hidden in the Painted World"@en ;
+    ds:locatedIn ds:PaintedWorld ;
+    ds:healthPoints 1880 ;
+    ds:souls 30000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:PriscillaSoul ;
+    # External links
+    skos:related dbr:Dragon ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:DarkSunGwyndolinBoss a ds:Boss ;
+    schema:name "Dark Sun Gwyndolin"@en ;
+    schema:description "Optional boss, Dark Sun and master of illusions"@en ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:healthPoints 2091 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:PhysicalDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:GwyndolinSoul ;
+    # External links
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+# DLC BOSSES (Artorias of the Abyss) - ENHANCED
+
+ds:SanctuaryGuardian a ds:Boss ;
+    schema:name "Sanctuary Guardian"@en ;
+    schema:description "Chimeric guardian of the Royal Wood"@en ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 2955 ;
+    ds:souls 20000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:SanctuaryGuardianSoul ;
+    # External links
+    skos:related dbr:Chimera_(mythology) ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:ArtoriasTheAbysswalker a ds:Boss ;
+    schema:name "Knight Artorias"@en ;
+    schema:description "Legendary knight corrupted by the Abyss"@en ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 3750 ;
+    ds:souls 50000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:ArtoriasSoul ;
+    # External links
+    skos:related dbr:Knight ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:BlackDragonKalameet a ds:Boss ;
+    schema:name "Black Dragon Kalameet"@en ;
+    schema:description "Ancient black dragon with one eye"@en ;
+    ds:locatedIn ds:RoyalWood ;
+    ds:healthPoints 5665 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:FireDamage, ds:MagicDamage ;
+    ds:drops ds:KalameetSoul ;
+    # External links
+    skos:related dbr:Dragon, dbr:European_dragon ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:Manus a ds:Boss ;
+    schema:name "Manus, Father of the Abyss"@en ;
+    schema:description "Primeval human whose soul became maddened"@en ;
+    ds:locatedIn ds:Chasm ;
+    ds:healthPoints 6665 ;
+    ds:souls 60000 ;
+    ds:weakTo ds:LightningDamage ;
+    ds:resistantTo ds:MagicDamage ;
+    ds:drops ds:ManusSoul ;
+    # External links
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:GwynLordOfCinder a ds:Boss ;
+    schema:name "Gwyn, Lord of Cinder"@en ;
+    schema:description "The final boss, first Lord of Cinder"@en ;
+    ds:locatedIn ds:KilnOfTheFirstFlame ;
+    ds:healthPoints 4250 ;
+    ds:souls 70000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:resistantTo ds:LightningDamage ;
+    ds:drops ds:GwynSoul ;
+    # External links
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:OrnsteinAndSmough a ds:Boss ;
+    schema:name "Ornstein and Smough"@en ;
+    schema:description "Dragon Slayer and Executioner, guardians of Anor Londo"@en ;
+    ds:locatedIn ds:AnorLondo ;
+    ds:healthPoints 4200 ;
+    ds:souls 50000 ;
+    ds:weakTo ds:FireDamage, ds:LightningDamage ;
+    ds:drops ds:OrnsteinSoul ;
+    # External links
+    owl:sameAs wd:Q50296408 ;
+    schema:subjectOf dbr:Dark_Souls, dbr:Ornstein_and_Smough ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:SifTheGreatWolf a ds:Boss ;
+    schema:name "Sif, the Great Grey Wolf"@en ;
+    schema:description "Loyal companion of Artorias wielding his greatsword"@en ;
+    ds:locatedIn ds:DarkrootGarden ;
+    ds:healthPoints 3432 ;
+    ds:souls 40000 ;
+    ds:weakTo ds:FireDamage ;
+    ds:drops ds:SifSoul ;
+    # External links
+    owl:sameAs wd:Q50296411 ;
+    skos:related dbr:Wolf ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+# ============================================
+# KEY NPC INDIVIDUALS
+# ============================================
+
+ds:Solaire a ds:QuestGiver, ds:Summon ;
+    schema:name "Solaire of Astora"@en ;
+    schema:description "Jolly warrior seeking his own sun"@en ;
+    ds:locatedIn ds:UndeadBurg ;
+    ds:memberOfCovenant ds:WarriorOfSunlight ;
+    # External links
+    owl:sameAs wd:Q50296404 ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+# ============================================
+# KEY AREA INDIVIDUALS
+# ============================================
+
+ds:AnorLondo a ds:Area ;
+    schema:name "Anor Londo"@en ;
+    schema:description "The magnificent city of the gods"@en ;
+    ds:connectsTo ds:SensFortress, ds:PaintedWorld, ds:TheDukesArchives ;
+    # External links
+    owl:sameAs wd:Q111819156 ;
+    skos:related dbr:Fictional_city ;
+    schema:subjectOf dbr:Dark_Souls ;
+    dcterms:isPartOf wd:Q1166232 .
+
+ds:FirelinkShrine a ds:Area ;
+    schema:name "Firelink Shrine"@en ;
+    schema:description "The central hub of Lordran"@en ;
+    ds:connectsTo ds:UndeadAsylum, ds:UndeadBurg, ds:NewLondoRuins, ds:Catacombs ;
+    # External links
+    owl:sameAs wd:Q111819155 ;
+    skos:related <http://dbpedia.org/resource/Hub_(video_games)> ;
+    schema:subjectOf dbr:Dark_Souls .
+
+# ============================================
+# KEY ITEM INDIVIDUALS
+# ============================================
+
+ds:EstusFlask a ds:Consumable ;
+    schema:name "Estus Flask"@en ;
+    schema:description "Refillable healing flask"@en ;
+    ds:foundIn ds:UndeadBurg ;
+    # External links
+    owl:sameAs wd:Q111819154 ;
+    skos:related dbr:Potion ; # General concept
+    schema:subjectOf dbr:Dark_Souls .
+
+# ============================================
+# EXTERNAL DATASET LINKS
+# ============================================
+
+# Link to main Dark Souls concepts
+wd:Q1166232 rdfs:label "Dark Souls"@en ;
+           rdfs:seeAlso ds: .
+
+dbr:Dark_Souls rdfs:seeAlso ds: ;
+               owl:sameAs wd:Q1166232 .
+
+# Link to game developer
+ds: dcterms:creator dbr:FromSoftware ;
+    dcterms:publisher dbr:Bandai_Namco_Entertainment .
+
+# Link to related franchises
+ds: skos:related dbr:Demon%27s_Souls ,
+                 dbr:Dark_Souls_II ,
+                 dbr:Dark_Souls_III ,
+                 dbr:Bloodborne ,
+                 dbr:Elden_Ring .
+
+# ============================================
+# PROVENANCE AND METADATA
+# ============================================
+
+# Track data sources
+ds:dataSource a owl:AnnotationProperty ;
+              rdfs:label "data source"@en ;
+              rdfs:comment "Source of the data in this ontology"@en .
+
+ds: ds:dataSource <https://darksouls.wiki.fextralife.com/> ,
+                  <https://darksouls.fandom.com/> ,
+                  dbr:Dark_Souls .
+
+# VoID Dataset Description (for discovery)
+<http://darksouls.ontology/dataset> a <http://rdfs.org/ns/void#Dataset> ;
+    dcterms:title "Dark Souls Linked Open Dataset"@en ;
+    dcterms:description "Linked Open Data representation of Dark Souls game universe"@en ;
+    <http://rdfs.org/ns/void#sparqlEndpoint> <http://darksouls.ontology/sparql> ;
+    <http://rdfs.org/ns/void#exampleResource> ds:GwynLordOfCinder ;
+    <http://rdfs.org/ns/void#vocabulary> <http://schema.org/> ,
+                                         <http://dbpedia.org/ontology/> ,
+                                         <http://xmlns.com/foaf/0.1/> .
