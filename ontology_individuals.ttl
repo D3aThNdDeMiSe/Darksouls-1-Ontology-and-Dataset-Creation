@@ -2815,7 +2815,7 @@ ds:SanctuaryGuardian a ds:Boss ;
     ds:resistantTo ds:MagicDamage ;
     ds:drops ds:SanctuaryGuardianSoul ;
     # External links
-    skos:related dbr:Chimera_(mythology) ;
+    skos:related <http://dbpedia.org/resource/Chimera_(mythology)> ;
     schema:subjectOf dbr:Dark_Souls ;
     dcterms:isPartOf wd:Q1166232 .
 
